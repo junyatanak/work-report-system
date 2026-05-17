@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="1LSRikpvm4giwvthtgNL" name="uc">
-        <mxGraphModel dx="793" dy="435" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="686" dy="495" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -31,7 +31,7 @@
                 <mxCell id="37" value="作業者を評価する" style="ellipse;whiteSpace=wrap;html=1;verticalAlign=middle;fillColor=#fff2cc;strokeColor=#d6b656;" parent="24" vertex="1">
                     <mxGeometry x="46" y="364" width="174" height="80" as="geometry"/>
                 </mxCell>
-                <mxCell id="UYCgT5LQkLy69A9fZJV7-41" value="ユーザーを管理する" style="ellipse;whiteSpace=wrap;html=1;verticalAlign=middle;" parent="24" vertex="1">
+                <mxCell id="UYCgT5LQkLy69A9fZJV7-41" value="アプリユーザーを管理する&lt;div&gt;権限設定&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;verticalAlign=middle;" parent="24" vertex="1">
                     <mxGeometry x="50" y="505" width="174" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="39" value="生産管理システム" style="image;html=1;image=img/lib/clip_art/computers/Monitor_Tower_128x128.png" parent="1" vertex="1">
@@ -65,7 +65,7 @@
         </mxGraphModel>
     </diagram>
     <diagram id="MJ6Hz8lXunTMIXr-4Pi1" name="st">
-        <mxGraphModel dx="1322" dy="725" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+        <mxGraphModel dx="686" dy="495" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -78,7 +78,7 @@
                 <mxCell id="u3U9J_T60oIhFfEUe9-V-4" value="" style="edgeStyle=none;html=1;endArrow=blockThin;endFill=1;startArrow=blockThin;startFill=1;" parent="1" source="wUIK1qrgCbQknI_TxHS--1" target="u3U9J_T60oIhFfEUe9-V-3" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="wUIK1qrgCbQknI_TxHS--1" value="作業実績の確認画面" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="wUIK1qrgCbQknI_TxHS--1" value="作業実績の管理画面" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="228" y="300" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="wUIK1qrgCbQknI_TxHS--5" value="ログイン画面" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
@@ -178,13 +178,13 @@
                 <mxCell id="h6y4lUQQLlg0B3mGcL_w-7" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;Password&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
                     <mxGeometry x="665" y="170" width="90" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="h6y4lUQQLlg0B3mGcL_w-8" value="&lt;font style=&quot;font-size: 19px;&quot;&gt;ホーム画面&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 19px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 19px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 19px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 19px;&quot;&gt;Welcome!&lt;/font&gt;&lt;span style=&quot;font-size: 19px; background-color: transparent;&quot;&gt;!&lt;/span&gt;&lt;/div&gt;" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.containers.marginRect2;rectMarginLeft=67;strokeColor=#666666;gradientColor=none;whiteSpace=wrap;verticalAlign=top;container=0;" parent="1" vertex="1">
-                    <mxGeometry x="650" y="280" width="390" height="280" as="geometry"/>
+                <mxCell id="h6y4lUQQLlg0B3mGcL_w-8" value="&lt;div&gt;&lt;font style=&quot;font-size: 19px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;font style=&quot;font-size: 19px;&quot;&gt;&lt;div&gt;&lt;font style=&quot;font-size: 19px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;作業実績&lt;/font&gt;" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.containers.marginRect2;rectMarginLeft=67;strokeColor=#666666;gradientColor=none;whiteSpace=wrap;verticalAlign=top;container=0;" parent="1" vertex="1">
+                    <mxGeometry x="650" y="280" width="520" height="280" as="geometry"/>
                 </mxCell>
                 <mxCell id="h6y4lUQQLlg0B3mGcL_w-14" value="&lt;font style=&quot;font-size: 15px;&quot;&gt;作業実績の登録&lt;/font&gt;" style="whiteSpace=wrap;html=1;strokeColor=#666666;fillColor=#f5f5f5;fontColor=#333333;" parent="1" vertex="1">
                     <mxGeometry x="573" y="280" width="120" height="40" as="geometry"/>
                 </mxCell>
-                <mxCell id="h6y4lUQQLlg0B3mGcL_w-13" value="&lt;font style=&quot;color: rgb(255, 255, 255); font-size: 15px;&quot;&gt;作業実績の検索&lt;/font&gt;" style="whiteSpace=wrap;html=1;fillColor=#008CFF;strokeColor=none;" parent="1" vertex="1">
+                <mxCell id="h6y4lUQQLlg0B3mGcL_w-13" value="&lt;font style=&quot;color: rgb(255, 255, 255); font-size: 15px;&quot;&gt;作業実績の管理&lt;/font&gt;" style="whiteSpace=wrap;html=1;fillColor=#008CFF;strokeColor=none;" parent="1" vertex="1">
                     <mxGeometry x="572" y="320" width="120" height="40" as="geometry"/>
                 </mxCell>
                 <mxCell id="h6y4lUQQLlg0B3mGcL_w-15" value="&lt;font style=&quot;font-size: 15px;&quot;&gt;作業者の評価&lt;/font&gt;" style="whiteSpace=wrap;html=1;strokeColor=#666666;fillColor=#f5f5f5;fontColor=#333333;" parent="1" vertex="1">
@@ -200,10 +200,10 @@
                     <mxGeometry x="572" y="480" width="120" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="h6y4lUQQLlg0B3mGcL_w-19" value="" style="verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;strokeWidth=1;shape=mxgraph.mockup.graphics.pieChart;strokeColor=#008cff;parts=10,20,35;partColors=#e0e0e0,#d0d0d0,#c0c0c0,#b0b0b0,#a0a0a0;strokeWidth=2;" parent="1" vertex="1">
-                    <mxGeometry x="900" y="430" width="110" height="110" as="geometry"/>
+                    <mxGeometry x="1000" y="430" width="110" height="110" as="geometry"/>
                 </mxCell>
                 <mxCell id="h6y4lUQQLlg0B3mGcL_w-20" value="" style="verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;strokeWidth=1;shape=mxgraph.mockup.graphics.lineChart;strokeColor=none;strokeColor2=#666666;strokeColor3=#008cff;strokeColor4=#dddddd;" parent="1" vertex="1">
-                    <mxGeometry x="750" y="450" width="140" height="80" as="geometry"/>
+                    <mxGeometry x="795" y="445" width="140" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="h6y4lUQQLlg0B3mGcL_w-12" value="" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.containers.leftButton;rSize=5;strokeColor=#008cff;fillColor=#008cff;resizeHeight=1;movable=0;deletable=0;" parent="1" vertex="1">
                     <mxGeometry x="690" y="280" width="30" height="280" as="geometry">
@@ -245,11 +245,26 @@
                         <Array as="points"/>
                     </mxGeometry>
                 </mxCell>
+                <mxCell id="oy4DjVEY--ULZJAyqpqt-1" value="作業実績" style="html=1;shadow=0;dashed=0;shape=mxgraph.bootstrap.tabTop;strokeColor=#DFDFDF;fillColor=#ffffff;rSize=5;perimeter=none;whiteSpace=wrap;resizeWidth=1;align=center;spacing=20;fontSize=14;fontColor=#4B5259;" vertex="1" parent="1">
+                    <mxGeometry x="719" y="280" width="91" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="oy4DjVEY--ULZJAyqpqt-2" value="マスタ" style="strokeColor=default;fillColor=none;rSize=5;perimeter=none;whiteSpace=wrap;resizeWidth=1;align=center;spacing=20;fontSize=14;fontColor=#0085FC;dashed=1;opacity=20;" vertex="1" parent="1">
+                    <mxGeometry x="810" y="280" width="80" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="oy4DjVEY--ULZJAyqpqt-3" value="ユーザー" style="strokeColor=default;fillColor=none;rSize=5;perimeter=none;whiteSpace=wrap;resizeWidth=1;align=center;spacing=20;fontSize=14;fontColor=#0085FC;dashed=1;opacity=20;" vertex="1" parent="1">
+                    <mxGeometry x="890" y="280" width="80" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="oy4DjVEY--ULZJAyqpqt-4" value="評価" style="strokeColor=default;fillColor=none;rSize=5;perimeter=none;whiteSpace=wrap;resizeWidth=1;align=center;spacing=20;fontSize=14;fontColor=#0085FC;fontColor=#4B5259;dashed=1;opacity=20;" vertex="1" parent="1">
+                    <mxGeometry x="970" y="281" width="76" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="oy4DjVEY--ULZJAyqpqt-5" value="" style="shape=line;strokeColor=#dddddd;" vertex="1" parent="1">
+                    <mxGeometry x="799" y="315" width="370" height="10" as="geometry"/>
+                </mxCell>
             </root>
         </mxGraphModel>
     </diagram>
     <diagram id="E9N6rmhl9iB8CKQMVUKl" name="ef">
-        <mxGraphModel dx="2302" dy="621" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+        <mxGraphModel dx="1855" dy="495" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -525,10 +540,10 @@
                 <mxCell id="kIvnj5qDQRBkNVZphA21-3" value="製造オーダー番号を入力すると、&lt;div&gt;DBからオーダーの情報を拾ってきて、&lt;/div&gt;&lt;div&gt;ItemNameおよび&lt;/div&gt;&lt;div&gt;オーダー数量は自動入力される&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;オーダー番号がない場合の入力方法は、&lt;/div&gt;&lt;div&gt;要検討。&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.text.callout;linkText=;textSize=17;textColor=#666666;callDir=SW;callStyle=line;fontSize=11;fontColor=#666666;align=left;verticalAlign=bottom;strokeColor=#666666;" parent="1" vertex="1">
                     <mxGeometry x="-205.5" y="79" width="242.5" height="100" as="geometry"/>
                 </mxCell>
-                <mxCell id="5nvGmSx00tSMZq1UXykp-1" value="&lt;span style=&quot;color: rgb(102, 102, 102); font-size: 11px; text-wrap-mode: nowrap;&quot;&gt;BreakTimeは&lt;/span&gt;&lt;span style=&quot;font-size: 11px; text-wrap-mode: nowrap; background-color: transparent;&quot;&gt;選択式にしてもよい。&lt;/span&gt;&lt;div style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251); font-size: 11px; text-wrap-mode: nowrap;&quot;&gt;クッキーによって&lt;span style=&quot;background-color: transparent;&quot;&gt;デフォルト値の選択値を&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251); font-size: 11px; text-wrap-mode: nowrap;&quot;&gt;決められると便利。&lt;/div&gt;&lt;div style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251); font-size: 11px; text-wrap-mode: nowrap;&quot;&gt;Start TImeとEndTimeから、&lt;/div&gt;&lt;div style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251); font-size: 11px; text-wrap-mode: nowrap;&quot;&gt;休憩時間に異常がないかチェック入れる。&lt;/div&gt;&lt;div style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251); font-size: 11px; text-wrap-mode: nowrap;&quot;&gt;&lt;br&gt;&lt;/div&gt;" style="shape=note2;boundedLbl=1;whiteSpace=wrap;html=1;size=25;verticalAlign=top;align=left;" vertex="1" parent="1">
+                <mxCell id="5nvGmSx00tSMZq1UXykp-1" value="&lt;span style=&quot;color: rgb(102, 102, 102); font-size: 11px; text-wrap-mode: nowrap;&quot;&gt;BreakTimeは&lt;/span&gt;&lt;span style=&quot;font-size: 11px; text-wrap-mode: nowrap; background-color: transparent;&quot;&gt;選択式にしてもよい。&lt;/span&gt;&lt;div style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251); font-size: 11px; text-wrap-mode: nowrap;&quot;&gt;クッキーによって&lt;span style=&quot;background-color: transparent;&quot;&gt;デフォルト値の選択値を&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251); font-size: 11px; text-wrap-mode: nowrap;&quot;&gt;決められると便利。&lt;/div&gt;&lt;div style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251); font-size: 11px; text-wrap-mode: nowrap;&quot;&gt;Start TImeとEndTimeから、&lt;/div&gt;&lt;div style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251); font-size: 11px; text-wrap-mode: nowrap;&quot;&gt;休憩時間に異常がないかチェック入れる。&lt;/div&gt;&lt;div style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251); font-size: 11px; text-wrap-mode: nowrap;&quot;&gt;&lt;br&gt;&lt;/div&gt;" style="shape=note2;boundedLbl=1;whiteSpace=wrap;html=1;size=25;verticalAlign=top;align=left;" parent="1" vertex="1">
                     <mxGeometry x="580" y="210" width="210" height="120" as="geometry"/>
                 </mxCell>
-                <mxCell id="5nvGmSx00tSMZq1UXykp-2" value="" style="edgeStyle=none;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;dashed=1;" edge="1" parent="1">
+                <mxCell id="5nvGmSx00tSMZq1UXykp-2" value="" style="edgeStyle=none;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;dashed=1;" parent="1" edge="1">
                     <mxGeometry width="100" relative="1" as="geometry">
                         <mxPoint x="492" y="260" as="sourcePoint"/>
                         <mxPoint x="592" y="260" as="targetPoint"/>
@@ -1002,7 +1017,7 @@
         </mxGraphModel>
     </diagram>
     <diagram id="KOneRcZGzVMuvbgFQ_HD" name="er">
-        <mxGraphModel dx="2050" dy="1310" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+        <mxGraphModel dx="1712" dy="1534" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -1141,15 +1156,15 @@
                         <mxRectangle width="420" height="30" as="alternateBounds"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="stUXSiIprklTt7fl1lOw-4" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;strokeColor=default;strokeWidth=1;align=center;verticalAlign=top;spacingTop=8;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" parent="XXVXTpbGCbYBICfcXY7c-1">
+                <mxCell id="stUXSiIprklTt7fl1lOw-4" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;strokeColor=default;strokeWidth=1;align=center;verticalAlign=top;spacingTop=8;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="XXVXTpbGCbYBICfcXY7c-1" vertex="1">
                     <mxGeometry y="150" width="450" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="stUXSiIprklTt7fl1lOw-5" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;editable=1;overflow=hidden;whiteSpace=wrap;html=1;strokeColor=default;strokeWidth=1;align=center;verticalAlign=top;spacingTop=8;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" parent="stUXSiIprklTt7fl1lOw-4">
+                <mxCell id="stUXSiIprklTt7fl1lOw-5" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;editable=1;overflow=hidden;whiteSpace=wrap;html=1;strokeColor=default;strokeWidth=1;align=center;verticalAlign=top;spacingTop=8;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="stUXSiIprklTt7fl1lOw-4" vertex="1">
                     <mxGeometry width="30" height="30" as="geometry">
                         <mxRectangle width="30" height="30" as="alternateBounds"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="stUXSiIprklTt7fl1lOw-6" value="breaktime ?(TimeSpan) NOT NULL Default 0 miniute" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;whiteSpace=wrap;html=1;strokeColor=default;strokeWidth=1;verticalAlign=top;spacingTop=8;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" parent="stUXSiIprklTt7fl1lOw-4">
+                <mxCell id="stUXSiIprklTt7fl1lOw-6" value="breaktime ?(TimeSpan) NOT NULL Default 0 miniute" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;whiteSpace=wrap;html=1;strokeColor=default;strokeWidth=1;verticalAlign=top;spacingTop=8;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="stUXSiIprklTt7fl1lOw-4" vertex="1">
                     <mxGeometry x="30" width="420" height="30" as="geometry">
                         <mxRectangle width="420" height="30" as="alternateBounds"/>
                     </mxGeometry>
@@ -1286,17 +1301,23 @@
                         <mxRectangle width="420" height="30" as="alternateBounds"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="3f6XA2khLfTpN-fqs_nL-1" value="&lt;div&gt;251207&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;将来的には、プロセス番号の属性から原価計算でほしい情報を集計できるようにしたいが、それには現状のプロセス番号の内容をすべて調べ上げる必要があるし、プロセスのマスタ管理システムの構築に膨大な時間を要することが予想される。まずは現状のプロセス番号をそのまま使用し、現状を把握するためのシステムを作成する。&lt;/div&gt;&lt;div&gt;↓&lt;/div&gt;&lt;div&gt;251212&lt;/div&gt;&lt;div&gt;やはり現実を知ることがシステム開発の一番の目的。プロセスの番号はそのままで、属性をつけて、分析できるようにしておく。&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;↓&lt;/div&gt;&lt;div&gt;260102&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;プロセスには組立・包装・印刷などさまざまな工程がある。一つのクラスでうまく表しきれない場合は、AssembleProcessやPringtingProcessなど派生クラスを作成してもよい。&lt;/div&gt;" style="shape=note;size=11;align=left;spacingLeft=10;html=1;whiteSpace=wrap;strokeColor=default;strokeWidth=1;verticalAlign=top;spacingTop=8;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;fillColor=default;" parent="1" vertex="1">
-                    <mxGeometry x="-300" y="420" width="263" height="360" as="geometry"/>
+                <mxCell id="zgPbL3tP3bCU_nrdcQ8e-1" value="Daily Work Report System" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;recursiveResize=0;container=1;collapsible=0;width=160;" parent="1" vertex="1">
+                    <mxGeometry x="-670" width="2460" height="1150" as="geometry"/>
                 </mxCell>
-                <mxCell id="3f6XA2khLfTpN-fqs_nL-2" value="" style="edgeStyle=none;endArrow=none;dashed=1;html=1;rounded=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="1" edge="1">
+                <mxCell id="Ql57rB-p-kgQf12HVOmh-3" value="&lt;div&gt;260103&lt;/div&gt;workerを消すと関連のworker_reportもすべて削除されてしまうため、ユーザーは編集はできても、削除はさせない。" style="shape=note2;boundedLbl=1;whiteSpace=wrap;html=1;size=25;verticalAlign=top;align=center;" parent="zgPbL3tP3bCU_nrdcQ8e-1" vertex="1">
+                    <mxGeometry x="1930" y="275" width="220.5" height="145" as="geometry"/>
+                </mxCell>
+                <mxCell id="3f6XA2khLfTpN-fqs_nL-1" value="&lt;div&gt;251207&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;将来的には、プロセス番号の属性から原価計算でほしい情報を集計できるようにしたいが、それには現状のプロセス番号の内容をすべて調べ上げる必要があるし、プロセスのマスタ管理システムの構築に膨大な時間を要することが予想される。まずは現状のプロセス番号をそのまま使用し、現状を把握するためのシステムを作成する。&lt;/div&gt;&lt;div&gt;↓&lt;/div&gt;&lt;div&gt;251212&lt;/div&gt;&lt;div&gt;やはり現実を知ることがシステム開発の一番の目的。プロセスの番号はそのままで、属性をつけて、分析できるようにしておく。&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;↓&lt;/div&gt;&lt;div&gt;260102&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;プロセスには組立・包装・印刷などさまざまな工程がある。一つのクラスでうまく表しきれない場合は、AssembleProcessやPringtingProcessなど派生クラスを作成してもよい。&lt;/div&gt;" style="shape=note;size=11;align=left;spacingLeft=10;html=1;whiteSpace=wrap;strokeColor=default;strokeWidth=1;verticalAlign=top;spacingTop=8;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;fillColor=default;" parent="zgPbL3tP3bCU_nrdcQ8e-1" vertex="1">
+                    <mxGeometry x="780" y="700" width="263" height="360" as="geometry"/>
+                </mxCell>
+                <mxCell id="3f6XA2khLfTpN-fqs_nL-2" value="" style="edgeStyle=none;endArrow=none;dashed=1;html=1;rounded=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="zgPbL3tP3bCU_nrdcQ8e-1" edge="1" target="3f6XA2khLfTpN-fqs_nL-1">
                     <mxGeometry x="1" relative="1" as="geometry">
-                        <mxPoint x="-37" y="600" as="targetPoint"/>
-                        <mxPoint x="63" y="606" as="sourcePoint"/>
+                        <mxPoint x="860" y="670" as="targetPoint"/>
+                        <mxPoint x="960" y="676" as="sourcePoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="qLPh_eBfr4K5cMYAFJc2-4" value="user" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;html=1;strokeColor=default;strokeWidth=1;verticalAlign=top;spacingTop=8;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;fillColor=default;" parent="1" vertex="1">
-                    <mxGeometry x="-440" y="140" width="450" height="150" as="geometry"/>
+                <mxCell id="qLPh_eBfr4K5cMYAFJc2-4" value="AspNetUser" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;html=1;strokeColor=default;strokeWidth=1;verticalAlign=top;spacingTop=8;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;fillColor=default;" parent="zgPbL3tP3bCU_nrdcQ8e-1" vertex="1">
+                    <mxGeometry x="100" y="150" width="450" height="150" as="geometry"/>
                 </mxCell>
                 <mxCell id="qLPh_eBfr4K5cMYAFJc2-5" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=1;strokeColor=default;strokeWidth=1;align=center;verticalAlign=top;spacingTop=8;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="qLPh_eBfr4K5cMYAFJc2-4" vertex="1">
                     <mxGeometry y="30" width="450" height="30" as="geometry"/>
@@ -1349,12 +1370,6 @@
                     <mxGeometry x="30" width="420" height="30" as="geometry">
                         <mxRectangle width="420" height="30" as="alternateBounds"/>
                     </mxGeometry>
-                </mxCell>
-                <mxCell id="zgPbL3tP3bCU_nrdcQ8e-1" value="Daily Work Report System" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;recursiveResize=0;container=1;collapsible=0;width=160;" parent="1" vertex="1">
-                    <mxGeometry x="-670" width="2460" height="1150" as="geometry"/>
-                </mxCell>
-                <mxCell id="Ql57rB-p-kgQf12HVOmh-3" value="&lt;div&gt;260103&lt;/div&gt;workerを消すと関連のworker_reportもすべて削除されてしまうため、ユーザーは編集はできても、削除はさせない。" style="shape=note2;boundedLbl=1;whiteSpace=wrap;html=1;size=25;verticalAlign=top;align=center;" vertex="1" parent="zgPbL3tP3bCU_nrdcQ8e-1">
-                    <mxGeometry x="1930" y="275" width="220.5" height="145" as="geometry"/>
                 </mxCell>
                 <mxCell id="zgPbL3tP3bCU_nrdcQ8e-2" value="Production Contorol System" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;recursiveResize=0;container=1;collapsible=0;width=160;" parent="1" vertex="1">
                     <mxGeometry x="-670" y="-413" width="2460" height="363" as="geometry"/>
