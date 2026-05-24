@@ -4,8 +4,8 @@ namespace DailyWorkReport.Models;
 
 public class Process
 {
-    public int ProcessId { get; set; }
-    public string ProcessName { get; set; } = String.Empty;
+    public int Id { get; set; }
+    public string Name { get; set; } = String.Empty;
     public string Operation { get; set; } = String.Empty;
     public int OutputPerCycle { get; set; }
     public double TargetCycleTime { get; set; }

@@ -4,9 +4,8 @@ namespace DailyWorkReport.Models;
 
 public class Worker
 {
-    public int WorkerId { get; set; }
-    public string WorkerName { get; set; } = String.Empty;
-
-    public ICollection<WorkerReport> WorkerReports { get; set; } = new List<WorkerReport>();
+    public int Id { get; set; }
+    public string? Name { get; set; }
+    public ICollection<WorkReportWorker> WorkReportWorkers { get; }= new List<WorkReportWorker>();
 
 }
