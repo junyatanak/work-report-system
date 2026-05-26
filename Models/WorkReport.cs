@@ -7,12 +7,13 @@ namespace DailyWorkReport.Models;
 public class WorkReport
 {
     public int Id { get; set; }
+    public DateOnly WorkDate { get; set; }
     public string ProductionOrderId {get; set;} = String.Empty;
     public int ProcessId { get; set; }
-    public DateOnly WorkDate { get; set; }
+    public int WorkConditionId { get; set; }
     public int UserId { get; set; }
 
     public Process Process { get; set; } = null!;
-    public ICollection<WorkReportWorker> WorkReportWorkers { get; set; } = new List<WorkReportWorker>();
+    public ICollection<WorkReportWorker> WorkReportWorkers { get;} = new List<WorkReportWorker>();
 
 }
