@@ -10,7 +10,7 @@ public class WorkReport
     public DateOnly WorkDate { get; set; }
     public string ProductionOrderId {get; set;} = String.Empty;
     public int ProcessId { get; set; }
-    public int WorkConditionId { get; set; }
+    public int WorkPatternId { get; set; }
     public int UserId { get; set; }
 
     public Process Process { get; set; } = null!;
