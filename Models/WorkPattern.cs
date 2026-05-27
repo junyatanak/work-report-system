@@ -2,7 +2,7 @@ using System;
 
 namespace DailyWorkReport.Models;
 
-public class Process
+public class WorkPattern
 {
     public int Id { get; set; }
     public string Name { get; set; } = String.Empty;

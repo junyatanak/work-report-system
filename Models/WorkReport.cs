@@ -14,6 +14,7 @@ public class WorkReport
     public int UserId { get; set; }
 
     public Process Process { get; set; } = null!;
+    public WorkPattern WorkPattern { get; set; } = null!;
     public ICollection<WorkReportWorker> WorkReportWorkers { get;} = new List<WorkReportWorker>();
 
 }
