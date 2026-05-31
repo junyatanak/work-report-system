@@ -1,6 +1,8 @@
 using System;
+using Microsoft.EntityFrameworkCore;
 namespace DailyWorkReport.Models;
 
+[Index(nameof(ProcessId), nameof(WorkPatternId), nameof(WorkClassId), IsUnique = true)]
 public class StandardWorkTime
 {
     public int Id { get; set; }

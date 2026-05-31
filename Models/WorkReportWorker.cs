@@ -3,8 +3,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DailyWorkReport.Models;
 
+[Index(nameof(WorkReportId), nameof(WorkerId), IsUnique = true)]
 public class WorkReportWorker
 {
+    public int Id { get; set; }
     public int WorkReportId { get; set; }
     public int WorkerId { get; set; }
 

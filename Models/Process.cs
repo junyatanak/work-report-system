@@ -1,7 +1,9 @@
 using System;
+using Microsoft.EntityFrameworkCore;
 
 namespace DailyWorkReport.Models;
 
+[Index(nameof(Name), IsUnique = true)]
 public class Process
 {
     public int Id { get; set; }
