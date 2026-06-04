@@ -11,7 +11,7 @@ public class WorkReport
     public int ProductionOrderId {get; set;}
     public int ProcessId { get; set; }
     public int WorkPatternId { get; set; }
-    public int UserId { get; set; }
+    public string UserId { get; set; } = String.Empty;
 
     public ProductionOrder ProductionOrder { get; set; } = null!;
     public Process Process { get; set; } = null!;
