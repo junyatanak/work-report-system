@@ -21,16 +21,16 @@ public class ApplicationDbContext:IdentityDbContext<ApplicationUser>
                     });
     }
 
-    public DbSet<Process> Processes { get; set; } = null!;
-    public DbSet<ProcessWorkPattern> ProcessWorkPatterns { get; set; } = null!;
-    public DbSet<Product> Products { get; set; } = null!;
-    public DbSet<ProductionOrder> ProductionOrders { get; set; } = null!;
-    public DbSet<StandardWorkTime> StandardWorkTimes { get; set; } = null!;
-    public DbSet<WorkClass> WorkClasses { get; set; } = null!;
-    public DbSet<Worker> Workers { get; set; } = null!;
-    public DbSet<WorkPattern> WorkPatterns { get; set; } = null!;
-    public DbSet<WorkReport> WorkReports { get; set; } = null!;
-    public DbSet<WorkReportWorker> WorkReportWorkers { get; set; } = null!;
+    public DbSet<Process> Processes => Set<Process>();
+    public DbSet<ProcessWorkPattern> ProcessWorkPatterns => Set<ProcessWorkPattern>();
+    public DbSet<Product> Products => Set<Product>();
+    public DbSet<ProductionOrder> ProductionOrders => Set<ProductionOrder>();
+    public DbSet<StandardWorkTime> StandardWorkTimes => Set<StandardWorkTime>();
+    public DbSet<WorkClass> WorkClasses => Set<WorkClass>();
+    public DbSet<Worker> Workers => Set<Worker>();
+    public DbSet<WorkPattern> WorkPatterns => Set<WorkPattern>();
+    public DbSet<WorkReport> WorkReports => Set<WorkReport>();
+    public DbSet<WorkReportWorker> WorkReportWorkers => Set<WorkReportWorker>();
 
 
 }
