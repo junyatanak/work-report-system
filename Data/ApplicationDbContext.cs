@@ -13,6 +13,8 @@ public class ApplicationDbContext:IdentityDbContext<ApplicationUser>
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.Entity<ProcessWorkPattern>()
                     .HasKey(x => new 
                     { 
