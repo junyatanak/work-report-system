@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="KOneRcZGzVMuvbgFQ_HD" name="er">
-        <mxGraphModel dx="2083" dy="1409" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+        <mxGraphModel dx="2011" dy="1380" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -13,13 +13,13 @@
                 <mxCell id="10" value="" style="edgeStyle=none;html=1;endArrow=ERone;endFill=0;startArrow=ERzeroToMany;startFill=0;" parent="zgPbL3tP3bCU_nrdcQ8e-1" source="nN-h1cGsEZKBEPtY7Nga-1" target="8" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="nN-h1cGsEZKBEPtY7Nga-1" value="AspNetUserRoles" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="zgPbL3tP3bCU_nrdcQ8e-1" vertex="1">
+                <mxCell id="nN-h1cGsEZKBEPtY7Nga-1" value="AspNetUserRoles" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="zgPbL3tP3bCU_nrdcQ8e-1" vertex="1">
                     <mxGeometry x="240" y="380" width="160" height="120" as="geometry"/>
                 </mxCell>
                 <mxCell id="nN-h1cGsEZKBEPtY7Nga-2" value="UserId(PK,FK)&lt;div&gt;RoleId(PK,FK)&lt;/div&gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" parent="nN-h1cGsEZKBEPtY7Nga-1" vertex="1">
                     <mxGeometry y="50" width="160" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="2" value="AspNetUser" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="zgPbL3tP3bCU_nrdcQ8e-1" vertex="1">
+                <mxCell id="2" value="AspNetUser" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="zgPbL3tP3bCU_nrdcQ8e-1" vertex="1">
                     <mxGeometry x="240" y="155" width="160" height="120" as="geometry"/>
                 </mxCell>
                 <mxCell id="3" value="Id(PK)&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;UserName&lt;br&gt;&lt;/font&gt;&lt;div&gt;PasswordHash&lt;/div&gt;&lt;/div&gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" parent="2" vertex="1">
@@ -28,7 +28,7 @@
                 <mxCell id="nN-h1cGsEZKBEPtY7Nga-12" value="" style="edgeStyle=none;html=1;endArrow=ERzeroToMany;endFill=0;startArrow=ERone;startFill=0;" parent="zgPbL3tP3bCU_nrdcQ8e-1" source="2" target="nN-h1cGsEZKBEPtY7Nga-10" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="8" value="AspNetRoles" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="zgPbL3tP3bCU_nrdcQ8e-1" vertex="1">
+                <mxCell id="8" value="AspNetRoles" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="zgPbL3tP3bCU_nrdcQ8e-1" vertex="1">
                     <mxGeometry x="240" y="580" width="160" height="120" as="geometry"/>
                 </mxCell>
                 <mxCell id="9" value="Id(PK)&lt;div&gt;Name&lt;/div&gt;&lt;div&gt;StandardWorkTime&lt;/div&gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" parent="8" vertex="1">
@@ -45,7 +45,7 @@
                         <mxPoint x="607" y="298" as="sourcePoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="nN-h1cGsEZKBEPtY7Nga-10" value="WorkReport" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="zgPbL3tP3bCU_nrdcQ8e-1" vertex="1">
+                <mxCell id="nN-h1cGsEZKBEPtY7Nga-10" value="WorkReport" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="zgPbL3tP3bCU_nrdcQ8e-1" vertex="1">
                     <mxGeometry x="560" y="132.5" width="160" height="165" as="geometry"/>
                 </mxCell>
                 <mxCell id="nN-h1cGsEZKBEPtY7Nga-11" value="Id(PK)&lt;div&gt;&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;WorkDate&lt;/span&gt;&lt;font color=&quot;#000000&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;ProductionOrderId(FK)&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;ProcessId(FK)&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;WorkPatternId(FK)&lt;/font&gt;&lt;/div&gt;&lt;div&gt;UserId(FK)&lt;/div&gt;&lt;/div&gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" parent="nN-h1cGsEZKBEPtY7Nga-10" vertex="1">
@@ -54,13 +54,13 @@
                 <mxCell id="16" value="" style="edgeStyle=none;html=1;endArrow=ERone;endFill=0;rounded=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;startArrow=ERzeroToMany;startFill=0;" parent="zgPbL3tP3bCU_nrdcQ8e-1" source="11" target="14" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="11" value="WorkReportWorker" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="zgPbL3tP3bCU_nrdcQ8e-1" vertex="1">
+                <mxCell id="11" value="WorkReportWorker" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="zgPbL3tP3bCU_nrdcQ8e-1" vertex="1">
                     <mxGeometry x="800" y="115" width="160" height="200" as="geometry"/>
                 </mxCell>
                 <mxCell id="12" value="&lt;div&gt;Id(PK)&lt;/div&gt;WorkReportId(FK)&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;WorkerId(FK)&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;StartAt&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;EndAt&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;BreakMinutes&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;ProducedQty&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;UQ(WorkReportId, WorkerId)&lt;/font&gt;&lt;/div&gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" parent="11" vertex="1">
                     <mxGeometry y="50" width="160" height="150" as="geometry"/>
                 </mxCell>
-                <mxCell id="14" value="Worker" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="zgPbL3tP3bCU_nrdcQ8e-1" vertex="1">
+                <mxCell id="14" value="Worker" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="zgPbL3tP3bCU_nrdcQ8e-1" vertex="1">
                     <mxGeometry x="1040" y="132.5" width="160" height="165" as="geometry"/>
                 </mxCell>
                 <mxCell id="15" value="Id(PK)&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;WorkerNumber(UQ)&lt;br&gt;&lt;/font&gt;&lt;div&gt;Name&lt;/div&gt;&lt;/div&gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" parent="14" vertex="1">
@@ -74,7 +74,7 @@
                 <mxCell id="31" value="" style="edgeStyle=none;html=1;endArrow=ERzeroToMany;endFill=0;startArrow=ERone;startFill=0;" parent="zgPbL3tP3bCU_nrdcQ8e-1" source="20" target="29" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="20" value="Process" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="zgPbL3tP3bCU_nrdcQ8e-1" vertex="1">
+                <mxCell id="20" value="Process" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="zgPbL3tP3bCU_nrdcQ8e-1" vertex="1">
                     <mxGeometry x="900" y="378.75" width="160" height="122.5" as="geometry"/>
                 </mxCell>
                 <mxCell id="21" value="Id(PK)&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;Name(UQ)&lt;/font&gt;&lt;/div&gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" parent="20" vertex="1">
@@ -89,13 +89,13 @@
                 <mxCell id="24" value="Id(PK)&lt;div&gt;&lt;span style=&quot;color: rgb(63, 63, 63); background-color: transparent;&quot;&gt;WorkClassId(FK)&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(63, 63, 63);&quot;&gt;ProcessId(FK)&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;WorkPatternId(FK)&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;StandardCycleSeconds&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;UQ(WorkClassId,ProcessId,&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;WorkPatternId)&lt;/font&gt;&lt;/div&gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" parent="23" vertex="1">
                     <mxGeometry y="50" width="160" height="150" as="geometry"/>
                 </mxCell>
-                <mxCell id="26" value="WorkPattern" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="zgPbL3tP3bCU_nrdcQ8e-1" vertex="1">
+                <mxCell id="26" value="WorkPattern" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="zgPbL3tP3bCU_nrdcQ8e-1" vertex="1">
                     <mxGeometry x="470" y="380" width="160" height="120" as="geometry"/>
                 </mxCell>
                 <mxCell id="27" value="Id(PK)&lt;div&gt;Name(UQ)&lt;/div&gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" parent="26" vertex="1">
                     <mxGeometry y="50" width="160" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="29" value="ProcessWorkPattern" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="zgPbL3tP3bCU_nrdcQ8e-1" vertex="1">
+                <mxCell id="29" value="ProcessWorkPattern" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="zgPbL3tP3bCU_nrdcQ8e-1" vertex="1">
                     <mxGeometry x="690" y="378.75" width="160" height="122.5" as="geometry"/>
                 </mxCell>
                 <mxCell id="30" value="ProcessId(PK,FK)&lt;div&gt;WorkPatternId(PK,FK)&lt;/div&gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" parent="29" vertex="1">
@@ -113,7 +113,7 @@
                         <mxPoint x="960" y="614" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="34" value="WorkClass" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="zgPbL3tP3bCU_nrdcQ8e-1" vertex="1">
+                <mxCell id="34" value="WorkClass" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="zgPbL3tP3bCU_nrdcQ8e-1" vertex="1">
                     <mxGeometry x="910" y="580" width="160" height="120" as="geometry"/>
                 </mxCell>
                 <mxCell id="35" value="Id(PK)&lt;br&gt;&lt;div&gt;Name(UQ)&lt;/div&gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" parent="34" vertex="1">
@@ -125,13 +125,13 @@
                 <mxCell id="39" value="" style="edgeStyle=none;html=1;endArrow=ERone;endFill=0;startArrow=ERzeroToMany;startFill=0;" parent="zgPbL3tP3bCU_nrdcQ8e-2" source="17" target="37" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="17" value="ProductionOrder" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="zgPbL3tP3bCU_nrdcQ8e-2" vertex="1">
+                <mxCell id="17" value="ProductionOrder" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="zgPbL3tP3bCU_nrdcQ8e-2" vertex="1">
                     <mxGeometry x="560" y="124" width="160" height="150" as="geometry"/>
                 </mxCell>
                 <mxCell id="18" value="Id(PK)&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;OrderNumber(UNIQUE)&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;ProductId(FK)&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;OrderQty&lt;/font&gt;&lt;/div&gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" parent="17" vertex="1">
                     <mxGeometry y="50" width="160" height="100" as="geometry"/>
                 </mxCell>
-                <mxCell id="37" value="Product" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="zgPbL3tP3bCU_nrdcQ8e-2" vertex="1">
+                <mxCell id="37" value="Product" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="zgPbL3tP3bCU_nrdcQ8e-2" vertex="1">
                     <mxGeometry x="960" y="124" width="160" height="150" as="geometry"/>
                 </mxCell>
                 <mxCell id="38" value="Id(PK)&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;Code(UNIQUE)&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Name&lt;/div&gt;&lt;div&gt;WorkClassId(FK)&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" parent="37" vertex="1">
