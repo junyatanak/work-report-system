@@ -10,23 +10,22 @@ using DailyWorkReport.Models;
 
 namespace DailyWorkReport.Controllers
 {
-    public class ProductsController : Controller
+    public class WorkClassesController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public ProductsController(ApplicationDbContext context)
+        public WorkClassesController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Products
+        // GET: WorkClasses
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Products.Include(p => p.WorkClass);
-            return View(await applicationDbContext.ToListAsync());
+            return View(await _context.WorkClasses.ToListAsync());
         }
 
-        // GET: Products/Details/5
+        // GET: WorkClasses/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,42 +33,39 @@ namespace DailyWorkReport.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Products
-                .Include(p => p.WorkClass)
+            var workClass = await _context.WorkClasses
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (product == null)
+            if (workClass == null)
             {
                 return NotFound();
             }
 
-            return View(product);
+            return View(workClass);
         }
 
-        // GET: Products/Create
+        // GET: WorkClasses/Create
         public IActionResult Create()
         {
-            ViewData["WorkClassId"] = new SelectList(_context.WorkClasses, "Id", "Name");
             return View();
         }
 
-        // POST: Products/Create
+        // POST: WorkClasses/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ProductCode,Name,WorkClassId")] Product product)
+        public async Task<IActionResult> Create([Bind("Id,Name")] WorkClass workClass)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(product);
+                _context.Add(workClass);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["WorkClassId"] = new SelectList(_context.WorkClasses, "Id", "Id", product.WorkClassId);
-            return View(product);
+            return View(workClass);
         }
 
-        // GET: Products/Edit/5
+        // GET: WorkClasses/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -77,23 +73,22 @@ namespace DailyWorkReport.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Products.FindAsync(id);
-            if (product == null)
+            var workClass = await _context.WorkClasses.FindAsync(id);
+            if (workClass == null)
             {
                 return NotFound();
             }
-            ViewData["WorkClassId"] = new SelectList(_context.WorkClasses, "Id", "Name", product.WorkClassId);
-            return View(product);
+            return View(workClass);
         }
 
-        // POST: Products/Edit/5
+        // POST: WorkClasses/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ProductCode,Name,WorkClassId")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] WorkClass workClass)
         {
-            if (id != product.Id)
+            if (id != workClass.Id)
             {
                 return NotFound();
             }
@@ -102,12 +97,12 @@ namespace DailyWorkReport.Controllers
             {
                 try
                 {
-                    _context.Update(product);
+                    _context.Update(workClass);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductExists(product.Id))
+                    if (!WorkClassExists(workClass.Id))
                     {
                         return NotFound();
                     }
@@ -118,11 +113,10 @@ namespace DailyWorkReport.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["WorkClassId"] = new SelectList(_context.WorkClasses, "Id", "Name", product.WorkClassId);
-            return View(product);
+            return View(workClass);
         }
 
-        // GET: Products/Delete/5
+        // GET: WorkClasses/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -130,35 +124,34 @@ namespace DailyWorkReport.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Products
-                .Include(p => p.WorkClass)
+            var workClass = await _context.WorkClasses
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (product == null)
+            if (workClass == null)
             {
                 return NotFound();
             }
 
-            return View(product);
+            return View(workClass);
         }
 
-        // POST: Products/Delete/5
+        // POST: WorkClasses/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var product = await _context.Products.FindAsync(id);
-            if (product != null)
+            var workClass = await _context.WorkClasses.FindAsync(id);
+            if (workClass != null)
             {
-                _context.Products.Remove(product);
+                _context.WorkClasses.Remove(workClass);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProductExists(int id)
+        private bool WorkClassExists(int id)
         {
-            return _context.Products.Any(e => e.Id == id);
+            return _context.WorkClasses.Any(e => e.Id == id);
         }
     }
 }
