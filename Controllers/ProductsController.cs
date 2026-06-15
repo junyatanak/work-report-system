@@ -65,7 +65,7 @@ namespace DailyWorkReport.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["WorkClassId"] = new SelectList(_context.WorkClasses, "Id", "Id", product.WorkClassId);
+            ViewData["WorkClassId"] = new SelectList(_context.WorkClasses, "Id", "Name", product.WorkClassId);
             return View(product);
         }
 
