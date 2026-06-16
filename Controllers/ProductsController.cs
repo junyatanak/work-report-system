@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DailyWorkReport.Data;
 using DailyWorkReport.Models;
+using DailyWorkReport.ViewModels;
 
 namespace DailyWorkReport.Controllers
 {
@@ -57,16 +58,22 @@ namespace DailyWorkReport.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ProductCode,Name,WorkClassId")] Product product)
+        public async Task<IActionResult> Create([Bind("ProductCode,Name,WorkClassId")] ProductCreateViewModel model)
         {
             if (ModelState.IsValid)
             {
+                var product = new Product
+                {
+                    ProductCode = model.ProductCode,
+                    Name = model.Name,
+                    WorkClassId = model.WorkClassId!.Value
+                };
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["WorkClassId"] = new SelectList(_context.WorkClasses, "Id", "Name", product.WorkClassId);
-            return View(product);
+            ViewData["WorkClassId"] = new SelectList(_context.WorkClasses, "Id", "Name", model.WorkClassId);
+            return View(model);
         }
 
         // GET: Products/Edit/5
