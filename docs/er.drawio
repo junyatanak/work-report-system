@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="KOneRcZGzVMuvbgFQ_HD" name="er">
-        <mxGraphModel dx="1849" dy="1267" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+        <mxGraphModel dx="1885" dy="1297" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -150,6 +150,9 @@
                             <mxPoint x="800" y="640"/>
                         </Array>
                     </mxGeometry>
+                </mxCell>
+                <mxCell id="41" value="WorkPattern Naming Convention&lt;br&gt;&lt;br&gt;PackagingType-OutputPerCycle-Option&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;&lt;br&gt;&lt;/font&gt;Examples:&lt;br&gt;SlideCard-1P&lt;br&gt;SlideCard-2P&lt;br&gt;SlideCard-1P-Label&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;align=left;verticalAlign=top;" vertex="1" parent="1">
+                    <mxGeometry x="-60" y="830" width="440" height="170" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
