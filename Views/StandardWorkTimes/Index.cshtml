@@ -1,0 +1,53 @@
+@model IEnumerable<DailyWorkReport.Models.StandardWorkTime>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.StandardCycleSeconds)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WorkClass)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Process)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WorkPattern)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.StandardCycleSeconds)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WorkClass.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Process.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WorkPattern.Id)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

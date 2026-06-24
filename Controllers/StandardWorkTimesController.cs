@@ -1,0 +1,176 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using DailyWorkReport.Data;
+using DailyWorkReport.Models;
+
+namespace DailyWorkReport.Controllers
+{
+    public class StandardWorkTimesController : Controller
+    {
+        private readonly ApplicationDbContext _context;
+
+        public StandardWorkTimesController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        // GET: StandardWorkTimes
+        public async Task<IActionResult> Index()
+        {
+            var applicationDbContext = _context.StandardWorkTimes.Include(s => s.Process).Include(s => s.WorkClass).Include(s => s.WorkPattern);
+            return View(await applicationDbContext.ToListAsync());
+        }
+
+        // GET: StandardWorkTimes/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var standardWorkTime = await _context.StandardWorkTimes
+                .Include(s => s.Process)
+                .Include(s => s.WorkClass)
+                .Include(s => s.WorkPattern)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (standardWorkTime == null)
+            {
+                return NotFound();
+            }
+
+            return View(standardWorkTime);
+        }
+
+        // GET: StandardWorkTimes/Create
+        public IActionResult Create()
+        {
+            ViewData["ProcessId"] = new SelectList(_context.Processes, "Id", "Name");
+            ViewData["WorkClassId"] = new SelectList(_context.WorkClasses, "Id", "Name");
+            ViewData["WorkPatternId"] = new SelectList(_context.WorkPatterns, "Id", "Name");
+            return View();
+        }
+
+        // POST: StandardWorkTimes/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id,WorkClassId,ProcessId,WorkPatternId,StandardCycleSeconds")] StandardWorkTime standardWorkTime)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(standardWorkTime);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["ProcessId"] = new SelectList(_context.Processes, "Id", "Name", standardWorkTime.ProcessId);
+            ViewData["WorkClassId"] = new SelectList(_context.WorkClasses, "Id", "Name", standardWorkTime.WorkClassId);
+            ViewData["WorkPatternId"] = new SelectList(_context.WorkPatterns, "Id", "Name", standardWorkTime.WorkPatternId);
+            return View(standardWorkTime);
+        }
+
+        // GET: StandardWorkTimes/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var standardWorkTime = await _context.StandardWorkTimes.FindAsync(id);
+            if (standardWorkTime == null)
+            {
+                return NotFound();
+            }
+            ViewData["ProcessId"] = new SelectList(_context.Processes, "Id", "Name", standardWorkTime.ProcessId);
+            ViewData["WorkClassId"] = new SelectList(_context.WorkClasses, "Id", "Name", standardWorkTime.WorkClassId);
+            ViewData["WorkPatternId"] = new SelectList(_context.WorkPatterns, "Id", "Name", standardWorkTime.WorkPatternId);
+            return View(standardWorkTime);
+        }
+
+        // POST: StandardWorkTimes/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,WorkClassId,ProcessId,WorkPatternId,StandardCycleSeconds")] StandardWorkTime standardWorkTime)
+        {
+            if (id != standardWorkTime.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(standardWorkTime);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!StandardWorkTimeExists(standardWorkTime.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["ProcessId"] = new SelectList(_context.Processes, "Id", "Name", standardWorkTime.ProcessId);
+            ViewData["WorkClassId"] = new SelectList(_context.WorkClasses, "Id", "Name", standardWorkTime.WorkClassId);
+            ViewData["WorkPatternId"] = new SelectList(_context.WorkPatterns, "Id", "Name", standardWorkTime.WorkPatternId);
+            return View(standardWorkTime);
+        }
+
+        // GET: StandardWorkTimes/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var standardWorkTime = await _context.StandardWorkTimes
+                .Include(s => s.Process)
+                .Include(s => s.WorkClass)
+                .Include(s => s.WorkPattern)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (standardWorkTime == null)
+            {
+                return NotFound();
+            }
+
+            return View(standardWorkTime);
+        }
+
+        // POST: StandardWorkTimes/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var standardWorkTime = await _context.StandardWorkTimes.FindAsync(id);
+            if (standardWorkTime != null)
+            {
+                _context.StandardWorkTimes.Remove(standardWorkTime);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool StandardWorkTimeExists(int id)
+        {
+            return _context.StandardWorkTimes.Any(e => e.Id == id);
+        }
+    }
+}
