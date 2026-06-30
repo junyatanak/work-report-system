@@ -12,7 +12,7 @@ public class StandardWorkTimeCreateViewModel
     [Required]
     [Display(Name = "WorkPattern")]
     public int WorkPatternId { get; set; }
-    [Display(Name = "Standard Work Cycle (Seconds)")]
-    public int? StandardCycleSeconds { get; set; }
-
+    [Display(Name = "Standard Work Time (pcs/hour)")]
+    [Range(typeof(decimal), "1", "100000")]
+    public decimal? StandardWorkTime { get; set; }
 }

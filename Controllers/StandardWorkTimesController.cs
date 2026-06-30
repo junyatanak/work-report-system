@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DailyWorkReport.Data;
 using DailyWorkReport.Models;
+using DailyWorkReport.ViewModels;
+using DailyWorkReport.Domain;
 
 namespace DailyWorkReport.Controllers
 {
@@ -61,10 +63,17 @@ namespace DailyWorkReport.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,WorkClassId,ProcessId,WorkPatternId,StandardCycleSeconds")] StandardWorkTime standardWorkTime)
+        public async Task<IActionResult> Create([Bind("Id,WorkClassId,ProcessId,WorkPatternId,StandardWorkTime")] StandardWorkTimeCreateViewModel vm)
         {
             if (ModelState.IsValid)
             {
+                var standardWorkTime = new StandardWorkTime
+                {
+                    WorkClassId = vm.WorkClassId,
+                    ProcessId = vm.ProcessId,
+                    WorkPatternId = vm.WorkPatternId,
+                    StandardCycleSeconds = StandardWorkTimeConverter.ToStandardCycleSeconds(vm.StandardWorkTime)
+                };
                 _context.Add(standardWorkTime);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
