@@ -78,10 +78,10 @@ namespace DailyWorkReport.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProcessId"] = new SelectList(_context.Processes, "Id", "Name", standardWorkTime.ProcessId);
-            ViewData["WorkClassId"] = new SelectList(_context.WorkClasses, "Id", "Name", standardWorkTime.WorkClassId);
-            ViewData["WorkPatternId"] = new SelectList(_context.WorkPatterns, "Id", "Name", standardWorkTime.WorkPatternId);
-            return View(standardWorkTime);
+            ViewData["ProcessId"] = new SelectList(_context.Processes, "Id", "Name", vm.ProcessId);
+            ViewData["WorkClassId"] = new SelectList(_context.WorkClasses, "Id", "Name", vm.WorkClassId);
+            ViewData["WorkPatternId"] = new SelectList(_context.WorkPatterns, "Id", "Name", vm.WorkPatternId);
+            return View(vm);
         }
 
         // GET: StandardWorkTimes/Edit/5
