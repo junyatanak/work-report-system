@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-namespace DailyWorkReport.ViewModels;
+namespace DailyWorkReport.ViewModels.StandardWorkTime;
 
 public class StandardWorkTimeCreateViewModel
 {

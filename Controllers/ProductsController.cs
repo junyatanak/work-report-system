@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DailyWorkReport.Data;
 using DailyWorkReport.Models;
-using DailyWorkReport.ViewModels;
+using DailyWorkReport.ViewModels.Product;
 
 namespace DailyWorkReport.Controllers
 {
