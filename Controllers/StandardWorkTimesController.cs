@@ -97,10 +97,17 @@ namespace DailyWorkReport.Controllers
             {
                 return NotFound();
             }
+            var vm = new StandardWorkTimeEditViewModel{
+                WorkClassId = standardWorkTime.WorkClassId,
+                ProcessId = standardWorkTime.ProcessId,
+                WorkPatternId = standardWorkTime.WorkPatternId,
+                StandardWorkTime = StandardWorkTimeConverter.ToPcsPerHour(standardWorkTime.StandardCycleSeconds)
+            };
+
             ViewData["ProcessId"] = new SelectList(_context.Processes, "Id", "Name", standardWorkTime.ProcessId);
             ViewData["WorkClassId"] = new SelectList(_context.WorkClasses, "Id", "Name", standardWorkTime.WorkClassId);
             ViewData["WorkPatternId"] = new SelectList(_context.WorkPatterns, "Id", "Name", standardWorkTime.WorkPatternId);
-            return View(standardWorkTime);
+            return View(vm);
         }
 
         // POST: StandardWorkTimes/Edit/5
@@ -108,9 +115,10 @@ namespace DailyWorkReport.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,WorkClassId,ProcessId,WorkPatternId,StandardCycleSeconds")] StandardWorkTime standardWorkTime)
+        public async Task<IActionResult> Edit(int id, [Bind("WorkClassId,ProcessId,WorkPatternId,StandardWorkTime")] StandardWorkTimeEditViewModel vm)
         {
-            if (id != standardWorkTime.Id)
+            var standardWorkTime = await _context.StandardWorkTimes.FindAsync(id);
+            if (standardWorkTime == null)
             {
                 return NotFound();
             }
@@ -119,7 +127,10 @@ namespace DailyWorkReport.Controllers
             {
                 try
                 {
-                    _context.Update(standardWorkTime);
+                    standardWorkTime.WorkClassId = vm.WorkClassId;
+                    standardWorkTime.ProcessId = vm.ProcessId;
+                    standardWorkTime.WorkPatternId = vm.WorkPatternId;
+                    standardWorkTime.StandardCycleSeconds = StandardWorkTimeConverter.ToStandardCycleSeconds(vm.StandardWorkTime);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -135,10 +146,10 @@ namespace DailyWorkReport.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProcessId"] = new SelectList(_context.Processes, "Id", "Name", standardWorkTime.ProcessId);
-            ViewData["WorkClassId"] = new SelectList(_context.WorkClasses, "Id", "Name", standardWorkTime.WorkClassId);
-            ViewData["WorkPatternId"] = new SelectList(_context.WorkPatterns, "Id", "Name", standardWorkTime.WorkPatternId);
-            return View(standardWorkTime);
+            ViewData["ProcessId"] = new SelectList(_context.Processes, "Id", "Name", vm.ProcessId);
+            ViewData["WorkClassId"] = new SelectList(_context.WorkClasses, "Id", "Name", vm.WorkClassId);
+            ViewData["WorkPatternId"] = new SelectList(_context.WorkPatterns, "Id", "Name", vm.WorkPatternId);
+            return View(vm);
         }
 
         // GET: StandardWorkTimes/Delete/5

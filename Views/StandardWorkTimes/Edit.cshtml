@@ -1,4 +1,4 @@
-@model DailyWorkReport.Models.StandardWorkTime
+@model DailyWorkReport.ViewModels.StandardWorkTime.StandardWorkTimeEditViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -12,7 +12,6 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="WorkClassId" class="control-label"></label>
                 <select asp-for="WorkClassId" class="form-control" asp-items="ViewBag.WorkClassId"></select>
@@ -29,9 +28,9 @@
                 <span asp-validation-for="WorkPatternId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="StandardCycleSeconds" class="control-label"></label>
-                <input asp-for="StandardCycleSeconds" class="form-control" />
-                <span asp-validation-for="StandardCycleSeconds" class="text-danger"></span>
+                <label asp-for="StandardWorkTime" class="control-label"></label>
+                <input asp-for="StandardWorkTime" class="form-control" />
+                <span asp-validation-for="StandardWorkTime" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
