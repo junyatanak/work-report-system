@@ -24,8 +24,16 @@ namespace DailyWorkReport.Controllers
         // GET: StandardWorkTimes
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.StandardWorkTimes.Include(s => s.Process).Include(s => s.WorkClass).Include(s => s.WorkPattern);
-            return View(await applicationDbContext.ToListAsync());
+            var vm = _context.StandardWorkTimes.Include(s => s.Process).Include(s => s.WorkClass).Include(s => s.WorkPattern)
+            .Select(s => new StandardWorkTimeDisplayViewModel
+            {
+                Id = s.Id,
+                WorkClassName = s.WorkClass.Name,
+                ProcessName = s.Process.Name,
+                WorkPatternName = s.WorkPattern.Name,
+                StandardWorkTime = StandardWorkTimeConverter.ToPcsPerHour(s.StandardCycleSeconds)
+            });
+            return View(await vm.ToListAsync());
         }
 
         // GET: StandardWorkTimes/Details/5
@@ -36,17 +44,25 @@ namespace DailyWorkReport.Controllers
                 return NotFound();
             }
 
-            var standardWorkTime = await _context.StandardWorkTimes
+            var vm = await _context.StandardWorkTimes
                 .Include(s => s.Process)
                 .Include(s => s.WorkClass)
                 .Include(s => s.WorkPattern)
+                .Select(s => new StandardWorkTimeDisplayViewModel
+                {
+                    Id = s.Id,
+                    WorkClassName = s.WorkClass.Name,
+                    ProcessName = s.Process.Name,
+                    WorkPatternName = s.WorkPattern.Name,
+                    StandardWorkTime = StandardWorkTimeConverter.ToPcsPerHour(s.StandardCycleSeconds)
+                })
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (standardWorkTime == null)
+            if (vm == null)
             {
                 return NotFound();
             }
 
-            return View(standardWorkTime);
+            return View(vm);
         }
 
         // GET: StandardWorkTimes/Create
@@ -63,8 +79,13 @@ namespace DailyWorkReport.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,WorkClassId,ProcessId,WorkPatternId,StandardWorkTime")] StandardWorkTimeCreateViewModel vm)
+        public async Task<IActionResult> Create([Bind("WorkClassId,ProcessId,WorkPatternId,StandardWorkTime")] StandardWorkTimeCreateViewModel vm)
         {
+            if(await CombinationExistsAsync(vm.WorkClassId, vm.ProcessId, vm.WorkPatternId))
+            {
+                ModelState.AddModelError(string.Empty, "The combination of Work Class, Process, and Work Pattern must be unique.");
+            }
+
             if (ModelState.IsValid)
             {
                 var standardWorkTime = new StandardWorkTime
@@ -117,6 +138,11 @@ namespace DailyWorkReport.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("WorkClassId,ProcessId,WorkPatternId,StandardWorkTime")] StandardWorkTimeEditViewModel vm)
         {
+            if(await CombinationExistsAsync(vm.WorkClassId, vm.ProcessId, vm.WorkPatternId, id))
+            {
+                ModelState.AddModelError(string.Empty, "The combination of Work Class, Process, and Work Pattern must be unique.");
+            }
+
             var standardWorkTime = await _context.StandardWorkTimes.FindAsync(id);
             if (standardWorkTime == null)
             {
@@ -160,17 +186,25 @@ namespace DailyWorkReport.Controllers
                 return NotFound();
             }
 
-            var standardWorkTime = await _context.StandardWorkTimes
+            var vm = await _context.StandardWorkTimes
                 .Include(s => s.Process)
                 .Include(s => s.WorkClass)
                 .Include(s => s.WorkPattern)
+                .Select(s => new StandardWorkTimeDisplayViewModel
+                {
+                    Id = s.Id,
+                    WorkClassName = s.WorkClass.Name,
+                    ProcessName = s.Process.Name,
+                    WorkPatternName = s.WorkPattern.Name,
+                    StandardWorkTime = StandardWorkTimeConverter.ToPcsPerHour(s.StandardCycleSeconds)
+                })
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (standardWorkTime == null)
+            if (vm == null)
             {
                 return NotFound();
             }
 
-            return View(standardWorkTime);
+            return View(vm);
         }
 
         // POST: StandardWorkTimes/Delete/5
@@ -192,5 +226,18 @@ namespace DailyWorkReport.Controllers
         {
             return _context.StandardWorkTimes.Any(e => e.Id == id);
         }
+        private async Task<bool> CombinationExistsAsync(
+            int workClassId,
+            int processId,
+            int workPatternId,
+            int? excludeId = null)
+        {
+            return await _context.StandardWorkTimes.AnyAsync(x =>
+                x.WorkClassId == workClassId &&
+                x.ProcessId == processId &&
+                x.WorkPatternId == workPatternId &&
+                (!excludeId.HasValue || x.Id != excludeId.Value));
+        }
+        
     }
 }

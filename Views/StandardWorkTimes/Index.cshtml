@@ -1,4 +1,4 @@
-@model IEnumerable<DailyWorkReport.Models.StandardWorkTime>
+@model IEnumerable<DailyWorkReport.ViewModels.StandardWorkTime.StandardWorkTimeDisplayViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,16 +13,16 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.StandardCycleSeconds)
+                @Html.DisplayNameFor(model => model.StandardWorkTime)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.WorkClass)
+                @Html.DisplayNameFor(model => model.WorkClassName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Process)
+                @Html.DisplayNameFor(model => model.ProcessName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.WorkPattern)
+                @Html.DisplayNameFor(model => model.WorkPatternName)
             </th>
             <th></th>
         </tr>
@@ -31,16 +31,16 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.StandardCycleSeconds)
+                @Html.DisplayFor(modelItem => item.StandardWorkTime)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.WorkClass.Name)
+                @Html.DisplayFor(modelItem => item.WorkClassName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Process.Name)
+                @Html.DisplayFor(modelItem => item.ProcessName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.WorkPattern.Name)
+                @Html.DisplayFor(modelItem => item.WorkPatternName)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
