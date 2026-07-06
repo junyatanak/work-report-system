@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using DailyWorkReport.Models;
+using DailyWorkReport.ViewModels.Account;
 
 
 namespace DailyWorkReport.Controllers
@@ -20,9 +21,38 @@ namespace DailyWorkReport.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(string? returnUrl = null)
         {
+            ViewData["ReturnUrl"] = returnUrl;
             return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginViewModel vm, string? returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+
+            if(!ModelState.IsValid)
+            {
+                return View(vm);
+            }
+
+            var result = await _signInManager.PasswordSignInAsync(vm.UserName, vm.Password, vm.RememberMe, lockoutOnFailure: false);
+
+            if (result.Succeeded)
+            {
+                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                {
+                    return LocalRedirect(returnUrl);
+                }
+                return RedirectToAction("Index", "Home");
+            }
+            
+            ModelState.AddModelError(string.Empty, "The username or password is incorrect.");
+            
+            return View(vm);
+    
         }
         
 
