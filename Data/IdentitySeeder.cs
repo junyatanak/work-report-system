@@ -1,6 +1,8 @@
+using DailyWorkReport.Constants;
 using DailyWorkReport.Models;
 using Microsoft.AspNetCore.Identity;
 
+namespace DailyWorkReport.Data;
 public static class IdentitySeeder
 {
     public static async Task SeedAsync(IServiceProvider serviceProvider)
@@ -8,7 +10,7 @@ public static class IdentitySeeder
         var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     
-        string[] roleNames = { "Admin", "User" };
+        string[] roleNames = { Roles.Admin, Roles.User };
         foreach (var roleName in roleNames)
         {
             if (!await roleManager.RoleExistsAsync(roleName))
@@ -21,9 +23,16 @@ public static class IdentitySeeder
         var adminUser = await userManager.FindByNameAsync("admin");
         if (adminUser == null)
         {
-            adminUser = new ApplicationUser { UserName = "admin", Email = "admin@example.com" };
-            await userManager.CreateAsync(adminUser, "Admin@123");
-            await userManager.AddToRoleAsync(adminUser, "Admin");
+            adminUser = new ApplicationUser { UserName = "admin" };
+            var result =await userManager.CreateAsync(adminUser, "Admin@123");
+            if(result.Succeeded)
+            {
+                await userManager.AddToRoleAsync(adminUser, Roles.Admin);
+            }
+            else
+            {
+                throw new Exception("Failed to create admin user: " + string.Join(", ", result.Errors.Select(e => e.Description)));
+            }
         }
     }
 }
