@@ -15,7 +15,11 @@ public static class IdentitySeeder
         {
             if (!await roleManager.RoleExistsAsync(roleName))
             {
-                await roleManager.CreateAsync(new IdentityRole(roleName));
+                var result = await roleManager.CreateAsync(new IdentityRole(roleName));
+                if (!result.Succeeded)
+                {
+                    throw new Exception("Failed to create role: " + string.Join(", ", result.Errors.Select(e => e.Description)));
+                }
             }
         }
 
@@ -25,13 +29,13 @@ public static class IdentitySeeder
         {
             adminUser = new ApplicationUser { UserName = "admin" };
             var result =await userManager.CreateAsync(adminUser, "Admin@123");
-            if(result.Succeeded)
+            if(!result.Succeeded)
             {
-                await userManager.AddToRoleAsync(adminUser, Roles.Admin);
+                throw new Exception("Failed to create admin user: " + string.Join(", ", result.Errors.Select(e => e.Description)));
             }
             else
             {
-                throw new Exception("Failed to create admin user: " + string.Join(", ", result.Errors.Select(e => e.Description)));
+                await userManager.AddToRoleAsync(adminUser, Roles.Admin);
             }
         }
     }
