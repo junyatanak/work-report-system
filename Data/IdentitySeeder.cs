@@ -33,10 +33,23 @@ public static class IdentitySeeder
             {
                 throw new Exception("Failed to create admin user: " + string.Join(", ", result.Errors.Select(e => e.Description)));
             }
-            else
+           
+            await userManager.AddToRoleAsync(adminUser, Roles.Admin);
+            
+        }
+        
+        var normalUser = await userManager.FindByNameAsync("user");
+        if (normalUser == null)
+        {
+            normalUser = new ApplicationUser { UserName = "user" };
+            var result =await userManager.CreateAsync(normalUser, "User@123");
+            if(!result.Succeeded)
             {
-                await userManager.AddToRoleAsync(adminUser, Roles.Admin);
+                throw new Exception("Failed to create normal user: " + string.Join(", ", result.Errors.Select(e => e.Description)));
             }
+                
+            await userManager.AddToRoleAsync(normalUser, Roles.User);
+            
         }
     }
 }

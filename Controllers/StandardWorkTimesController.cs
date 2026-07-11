@@ -10,6 +10,7 @@ using DailyWorkReport.Models;
 using DailyWorkReport.Domain;
 using DailyWorkReport.ViewModels.StandardWorkTime;
 using Microsoft.AspNetCore.Authorization;
+using DailyWorkReport.Constants;
 
 namespace DailyWorkReport.Controllers
 {
@@ -67,7 +68,7 @@ namespace DailyWorkReport.Controllers
         }
 
         // GET: StandardWorkTimes/Create
-        [Authorize]
+        [Authorize(Roles = Roles.Admin)]
         public IActionResult Create()
         {
             ViewData["ProcessId"] = new SelectList(_context.Processes, "Id", "Name");
