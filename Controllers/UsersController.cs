@@ -5,6 +5,7 @@ using DailyWorkReport.ViewModels.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace DailyWorkReport.Controllers
@@ -13,9 +14,11 @@ namespace DailyWorkReport.Controllers
     public class UsersController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        public UsersController(UserManager<ApplicationUser> userManager)
+        private readonly RoleManager<IdentityRole> _roleManager;
+        public UsersController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
+            _roleManager = roleManager;
         }
         // GET: UsersController
         public async Task<IActionResult> Index()
@@ -35,6 +38,13 @@ namespace DailyWorkReport.Controllers
             }
 
             return View(users);
+        }
+        [HttpGet]
+        public async Task<IActionResult> Create()
+        {
+            var roles = await _roleManager.Roles.ToListAsync();
+            ViewData["RoleName"] = new SelectList(roles, "Name", "Name");
+            return View();
         }
 
     }
