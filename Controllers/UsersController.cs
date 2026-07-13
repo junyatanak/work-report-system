@@ -47,5 +47,38 @@ namespace DailyWorkReport.Controllers
             return View();
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(UserCreateViewModel vm)
+        {
+            if(!ModelState.IsValid)
+            {
+                var roles = await _roleManager.Roles.ToListAsync();
+                ViewData["RoleName"] = new SelectList(roles, "Name", "Name",vm.RoleName);
+                return View(vm);
+            }
+
+            var user = new ApplicationUser
+            {
+                UserName = vm.UserName
+            };
+
+            var result = await _userManager.CreateAsync(user, vm.Password);
+            if(!result.Succeeded)
+            {
+                foreach(var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+                var roles = await _roleManager.Roles.ToListAsync();
+                ViewData["RoleName"] = new SelectList(roles, "Name", "Name",vm.RoleName);
+                return View(vm);
+            }
+            await _userManager.AddToRoleAsync(user, vm.RoleName);
+            return RedirectToAction(nameof(Index));
+
+        }
+
+
     }
 }
