@@ -42,8 +42,7 @@ namespace DailyWorkReport.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            var roles = await _roleManager.Roles.ToListAsync();
-            ViewData["RoleName"] = new SelectList(roles, "Name", "Name");
+            await PopulateRoleSelectList();
             return View();
         }
 
@@ -53,8 +52,14 @@ namespace DailyWorkReport.Controllers
         {
             if(!ModelState.IsValid)
             {
-                var roles = await _roleManager.Roles.ToListAsync();
-                ViewData["RoleName"] = new SelectList(roles, "Name", "Name",vm.RoleName);
+                await PopulateRoleSelectList(vm.RoleName);
+                return View(vm);
+            }
+
+            if(!await _roleManager.RoleExistsAsync(vm.RoleName))
+            {
+                ModelState.AddModelError(string.Empty, "Selected role does not exist.");
+                await PopulateRoleSelectList(vm.RoleName);
                 return View(vm);
             }
 
@@ -70,13 +75,29 @@ namespace DailyWorkReport.Controllers
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
-                var roles = await _roleManager.Roles.ToListAsync();
-                ViewData["RoleName"] = new SelectList(roles, "Name", "Name",vm.RoleName);
+                await PopulateRoleSelectList(vm.RoleName);
                 return View(vm);
             }
-            await _userManager.AddToRoleAsync(user, vm.RoleName);
+
+            var roleResult = await _userManager.AddToRoleAsync(user, vm.RoleName);
+            if(!roleResult.Succeeded)
+            {
+                foreach(var error in roleResult.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+                await PopulateRoleSelectList(vm.RoleName);
+                return View(vm);
+            }
+
             return RedirectToAction(nameof(Index));
 
+        }
+
+        private async Task PopulateRoleSelectList(string? selected = null)
+        {
+            var roles = await _roleManager.Roles.ToListAsync();
+            ViewData["RoleName"] = new SelectList(roles, "Name", "Name", selected);
         }
 
 
