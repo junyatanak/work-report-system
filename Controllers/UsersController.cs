@@ -222,6 +222,45 @@ namespace DailyWorkReport.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ResetPassword(string id)
+        {
+            if(string.IsNullOrEmpty(id)) return NotFound();
+            var user = await _userManager.FindByIdAsync(id);
+            if(user == null) return NotFound();
+            var vm = new UserResetPasswordViewModel
+            {
+                Id = user.Id,
+                UserName = user.UserName ?? string.Empty
+            };
+            return View(vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(string id, UserResetPasswordViewModel input)
+        {
+            if(string.IsNullOrEmpty(id) || id != input.Id) return NotFound();
+            if(!ModelState.IsValid)
+            {
+                return View(input);
+            }
+            var user = await _userManager.FindByIdAsync(id);
+            if(user == null) return NotFound();
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var result = await _userManager.ResetPasswordAsync(user, token, input.NewPassword);
+            if(!result.Succeeded)
+            {
+                foreach(var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+                return View(input);
+            }
+            TempData["Message"] = $"Password for '{user.UserName}' reset successfully.";
+            return RedirectToAction(nameof(Index));
+        }
+
         private async Task PopulateRoleSelectList(string? selected = null)
         {
             var roles = await _roleManager.Roles.ToListAsync();
