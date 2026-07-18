@@ -165,6 +165,63 @@ namespace DailyWorkReport.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Delete(string id)
+        {
+            if(string.IsNullOrEmpty(id)) return NotFound();
+            var user = await _userManager.FindByIdAsync(id);
+            if(user == null) return NotFound();
+            var roles = await _userManager.GetRolesAsync(user);
+            var vm = new UserDisplayViewModel
+            {
+                Id = user.Id,
+                UserName = user.UserName ?? string.Empty,
+                RoleName = roles.FirstOrDefault() ?? string.Empty
+            };
+            return View(vm);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(string id)
+        {
+            if(string.IsNullOrEmpty(id)) return NotFound();
+            var user = await _userManager.FindByIdAsync(id);
+            if(user == null) return NotFound();
+            var roles = await _userManager.GetRolesAsync(user);
+            var vm = new UserDisplayViewModel
+            {
+                Id = user.Id,
+                UserName = user.UserName ?? string.Empty,
+                RoleName = roles.FirstOrDefault() ?? string.Empty
+            };
+            var currentUserId = _userManager.GetUserId(User);
+            if(user.Id == currentUserId){
+                ModelState.AddModelError(string.Empty, "You cannot delete your own account.");
+                return View(vm);
+            }
+            if(await _userManager.IsInRoleAsync(user, Roles.Admin))
+            {
+                var admins = await _userManager.GetUsersInRoleAsync(Roles.Admin);
+                if(admins.Count <= 1)
+                {
+                    ModelState.AddModelError(string.Empty, "At least one administrator must remain.");
+                    return View(vm);
+                }
+            }
+
+            var result = await _userManager.DeleteAsync(user);
+            if(!result.Succeeded)
+            {
+                foreach(var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+                return View(vm);
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
         private async Task PopulateRoleSelectList(string? selected = null)
         {
             var roles = await _roleManager.Roles.ToListAsync();
