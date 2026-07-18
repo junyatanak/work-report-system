@@ -4,7 +4,6 @@ namespace DailyWorkReport.ViewModels.User;
 
 public class UserResetPasswordViewModel
 {
-    public string Id { get; init; } = string.Empty;
     public string UserName { get; init; } = string.Empty;
     [Required]
     [DataType(DataType.Password)]

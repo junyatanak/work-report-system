@@ -6,6 +6,13 @@
 
 <h1>Users</h1>
 
+@if(TempData["Message"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Message"]
+    </div>
+}
+
 <p>
     <a asp-action="Create">Create New</a>
 </p>
@@ -32,6 +39,7 @@
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="ResetPassword" asp-route-id="@item.Id">Reset Password</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>

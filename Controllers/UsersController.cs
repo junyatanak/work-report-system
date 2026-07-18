@@ -230,7 +230,6 @@ namespace DailyWorkReport.Controllers
             if(user == null) return NotFound();
             var vm = new UserResetPasswordViewModel
             {
-                Id = user.Id,
                 UserName = user.UserName ?? string.Empty
             };
             return View(vm);
@@ -240,7 +239,7 @@ namespace DailyWorkReport.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(string id, UserResetPasswordViewModel input)
         {
-            if(string.IsNullOrEmpty(id) || id != input.Id) return NotFound();
+            if(string.IsNullOrEmpty(id)) return NotFound();
             if(!ModelState.IsValid)
             {
                 return View(input);
