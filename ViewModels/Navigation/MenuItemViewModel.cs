@@ -1,3 +1,4 @@
+namespace DailyWorkReport.ViewModels.Navigation;
 public class MenuItemViewModel
 {
     public string Text { get; set; } = string.Empty;
