@@ -1,13 +1,13 @@
 @model List<DailyWorkReport.ViewModels.Navigation.MenuItemViewModel>
 
-<ul class="nav flex-colum p-2">
+<ul class="nav flex-column p-2">
     @foreach (var item in Model){
         if(item.SubItems.Any()){
             var collapseId = $"collapse-{item.Text.Replace(" ","")}";
             <li class="nav-item mb-1">
                 <a class="nav-link text-dark d-flex align-items-center" data-bs-toggle="collapse" href="#@collapseId" role="button" aria-expanded="false">
                     <i class="bi @item.IconClass me-2"></i>@item.Text
-                    <i class="bi bi-chevron-down-ms-auto small"></i>
+                    <i class="bi bi-chevron-down ms-auto small"></i>
                 </a>
                 <div class="collapse" id="@collapseId">
                     <ul class="nav flex-column ps-4">
@@ -21,6 +21,14 @@
                     </ul>
                 </div>
 
+            </li>
+        }
+        else
+        {
+            <li class="nav-item mb-1">
+                <a class="nav-link text-dark" asp-controller="@item.Controller" asp-action="@item.Action">
+                    <i class="bi @item.IconClass me-2"></i>@item.Text
+                </a>
             </li>
         }
     }
