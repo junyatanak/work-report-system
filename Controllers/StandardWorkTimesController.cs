@@ -14,6 +14,7 @@ using DailyWorkReport.Constants;
 
 namespace DailyWorkReport.Controllers
 {
+    [Authorize(Roles = Roles.Admin)]
     public class StandardWorkTimesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -68,7 +69,6 @@ namespace DailyWorkReport.Controllers
         }
 
         // GET: StandardWorkTimes/Create
-        [Authorize(Roles = Roles.Admin)]
         public IActionResult Create()
         {
             ViewData["ProcessId"] = new SelectList(_context.Processes, "Id", "Name");

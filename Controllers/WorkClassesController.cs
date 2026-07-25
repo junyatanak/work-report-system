@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DailyWorkReport.Data;
 using DailyWorkReport.Models;
+using Microsoft.AspNetCore.Authorization;
+using DailyWorkReport.Constants;
 
 namespace DailyWorkReport.Controllers
 {
+    [Authorize(Roles = Roles.Admin)]
     public class WorkClassesController : Controller
     {
         private readonly ApplicationDbContext _context;

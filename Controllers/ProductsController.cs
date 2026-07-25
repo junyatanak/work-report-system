@@ -8,9 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using DailyWorkReport.Data;
 using DailyWorkReport.Models;
 using DailyWorkReport.ViewModels.Product;
+using Microsoft.AspNetCore.Authorization;
+using DailyWorkReport.Constants;
 
 namespace DailyWorkReport.Controllers
 {
+    [Authorize(Roles = Roles.Admin)]
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
