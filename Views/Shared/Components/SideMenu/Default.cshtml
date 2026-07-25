@@ -14,7 +14,7 @@
                         @foreach (var subItem in item.SubItems){
                             <li class="nav-item">
                                 <a class="nav-link text-dark py-1" asp-controller="@subItem.Controller" asp-action="@subItem.Action">
-                                    @subItem.Text
+                                    <i class="bi @subItem.IconClass me-2"></i>@subItem.Text
                                 </a>
                             </li>
                         }

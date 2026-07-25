@@ -19,12 +19,12 @@ public class SideMenuViewComponent : ViewComponent
                 IconClass = "bi-database",
                 SubItems = new List<MenuItemViewModel>
                 {
-                    new() { Text = "Product", Controller = "Products", Action = "Index" },
-                    new() { Text = "Work Class", Controller = "WorkClasses", Action = "Index" },
-                    new() { Text = "Process", Controller = "Processes", Action = "Index" },
-                    new() { Text = "Work Pattern", Controller = "WorkPatterns", Action = "Index" },
-                    new() { Text = "Standard Work Time", Controller = "StandardWorkTimes", Action = "Index" },
-                    new() { Text = "Worker", Controller = "Workers", Action = "Index" },
+                    new() { Text = "Product", Controller = "Products", Action = "Index", IconClass = "bi-box-seam" },
+                    new() { Text = "Process", Controller = "Processes", Action = "Index", IconClass = "bi-wrench" },
+                    new() { Text = "Work Class", Controller = "WorkClasses", Action = "Index", IconClass = "bi-tags" },
+                    new() { Text = "Work Pattern", Controller = "WorkPatterns", Action = "Index", IconClass = "bi-diagram-3" },
+                    new() { Text = "Standard Work Time", Controller = "StandardWorkTimes", Action = "Index", IconClass = "bi-clock" },
+                    new() { Text = "Worker", Controller = "Workers", Action = "Index", IconClass = "bi-person-badge" },
                 }
             });
             menuItems.Add(new(){Text = "User", Controller = "Users", Action = "Index", IconClass = "bi-people"});
