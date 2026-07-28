@@ -9,7 +9,8 @@ public class SideMenuViewComponent : ViewComponent
     {
         var menuItems = new List<MenuItemViewModel>
         {
-            new () {Text = "Work Report", Controller = "WorkReports", Action = "Index", IconClass = "bi-file-text"}
+            new () {Text = "Work Report", Controller = "WorkReports", Action = "Index", IconClass = "bi-file-text"},
+            new () {Text = "Production Order", Controller = "ProductionOrders", Action = "Index", IconClass = "bi-clipboard-check"},
         };
         if (User.IsInRole("Admin"))
         {
