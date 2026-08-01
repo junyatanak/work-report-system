@@ -32,4 +32,23 @@ public class ProductionOrdersController : Controller
         return View(productionOrders);
     }
     
+    public IActionResult Create()
+    {
+        return View(new ProductionOrderCreateViewModel());
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> FindProductByCode(string code)
+    {
+        var product = await _context.Products
+            .Where(p => p.ProductCode == code)
+            .Select(p => new{p.Id, p.Name})
+            .FirstOrDefaultAsync();
+        if(product == null)
+        {
+            return NotFound();
+        }
+
+        return Json(product);
+    }
 }
