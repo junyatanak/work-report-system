@@ -18,11 +18,12 @@
     <div class="mb-3">
         <label asp-for="ProductCode" class="form-label"></label>
         <input asp-for="ProductCode" id="productCode" class="form-control" autocomplete="off" />
+        <span asp-validation-for="ProductCode" class="text-danger"></span>
         <span id="productCodeError" class="text-danger small"></span>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Product Name</label>
+        <label class="form-label" for="productName">Product Name</label>
         <input id="productName" class="form-control" disabled />
         <input asp-for="ProductId" id="productId" type="hidden" />
         <span asp-validation-for="ProductId" class="text-danger"></span>
@@ -61,13 +62,17 @@
                 return;
             }
 
-            const response = await fetch('/ProductionOrders/FindProductByCode?code=${encodeURIComponent(code)}');
-            if(response.ok) {
-                const product = await response.json();
-                nameEl.value = product.name;
-                idEl.value = product.id;
-            } else {
-                errorEl.textContent = 'Product not found.';
+            try {
+                const response = await fetch(`/ProductionOrders/FindProductByCode?code=${encodeURIComponent(code)}`);
+                if(response.ok) {
+                    const product = await response.json();
+                    nameEl.value = product.name;
+                    idEl.value = product.id;
+                } else {
+                    errorEl.textContent = 'Product not found.';
+                }
+            } catch {
+                errorEl.textContent = 'Failed to check product code. Please try again.';
             }
         });
     </script>
