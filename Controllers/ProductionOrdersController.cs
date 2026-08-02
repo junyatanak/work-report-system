@@ -1,4 +1,5 @@
 using DailyWorkReport.Data;
+using DailyWorkReport.Models;
 using DailyWorkReport.ViewModels.ProductionOrder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -35,6 +36,29 @@ public class ProductionOrdersController : Controller
     public IActionResult Create()
     {
         return View(new ProductionOrderCreateViewModel());
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(ProductionOrderCreateViewModel vm)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(vm);
+        }
+
+        var productionOrder = new ProductionOrder
+        {
+            OrderNumber = vm.OrderNumber,
+            ProductId = vm.ProductId!.Value,
+            OrderQty = vm.OrderQty,
+            DueDate = vm.DueDate
+        };
+
+        _context.ProductionOrders.Add(productionOrder);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Index));
     }
 
     [HttpGet]
