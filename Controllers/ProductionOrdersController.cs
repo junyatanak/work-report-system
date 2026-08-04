@@ -51,7 +51,7 @@ public class ProductionOrdersController : Controller
         {
             OrderNumber = vm.OrderNumber,
             ProductId = vm.ProductId!.Value,
-            OrderQty = vm.OrderQty,
+            OrderQty = vm.OrderQty!.Value,
             DueDate = vm.DueDate
         };
 

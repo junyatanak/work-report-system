@@ -6,9 +6,11 @@ public class ProductionOrderCreateViewModel
 {
     
     [Required(ErrorMessage = "Order number is required.")]  
+    [Display(Name = "Order Number")]
     public string OrderNumber { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Product code is required.")]
+    [Display(Name = "Product Code")]
     public string ProductCode { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Please enter a valid product code.")]
@@ -16,8 +18,10 @@ public class ProductionOrderCreateViewModel
 
     [Required(ErrorMessage = "Order quantity is required.")]
     [Range(1, int.MaxValue, ErrorMessage = "Order quantity must be at least 1.")]
-    public int OrderQty { get; set; }
+    [Display(Name = "Order Quantity")]
+    public int? OrderQty { get; set; }
 
     [Required(ErrorMessage = "Due date is required.")]
-    public DateOnly DueDate { get; set; }
+    [Display(Name = "Due Date")]
+    public DateOnly DueDate { get; set; } = DateOnly.FromDateTime(DateTime.Today);
 }
