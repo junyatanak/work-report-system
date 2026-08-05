@@ -77,8 +77,14 @@ public class ProductionOrdersController : Controller
 
         var vm = new ProductionOrderEditViewModel
         {
-            
-        }
+            Id = productionOrder.Id,
+            OrderNumber = productionOrder.OrderNumber,
+            ProductCode = productionOrder.Product.ProductCode,
+            ProductId = productionOrder.ProductId,
+            OrderQty = productionOrder.OrderQty,
+            DueDate = productionOrder.DueDate
+        };
+        return View(vm);
 
     }
 
