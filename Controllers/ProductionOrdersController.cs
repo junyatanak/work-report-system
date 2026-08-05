@@ -61,6 +61,27 @@ public class ProductionOrdersController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    public async Task<IActionResult> Edit(int id)
+    {
+        var productionOrder = await _context.ProductionOrders
+            .Include(p => p.Product)
+            .FirstOrDefaultAsync(p => p.Id == id);
+        if(productionOrder == null)
+        {
+            return NotFound();
+        }
+        if(await _context.WorkReports.AnyAsync(w => w.ProductionOrderId == id))
+        {
+            return Forbid();
+        }
+
+        var vm = new ProductionOrderEditViewModel
+        {
+            
+        }
+
+    }
+
     [HttpGet]
     public async Task<IActionResult> FindProductByCode(string code)
     {
