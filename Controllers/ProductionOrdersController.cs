@@ -95,6 +95,29 @@ public class ProductionOrdersController : Controller
         {
             return BadRequest();
         }
+        if(await _context.WorkReports.AnyAsync(w => w.ProductionOrderId == id))
+        {
+            return Forbid();
+        }
+        if (!ModelState.IsValid)
+        {
+            return View(vm);
+        }
+
+        var productionOrder = await _context.ProductionOrders.FindAsync(id);
+        if(productionOrder == null)
+        {
+            return NotFound();
+        }
+
+        productionOrder.OrderNumber = vm.OrderNumber;
+        productionOrder.ProductId = vm.ProductId!.Value;
+        productionOrder.OrderQty = vm.OrderQty!.Value;
+        productionOrder.DueDate = vm.DueDate;
+
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Index));
         
     }
 

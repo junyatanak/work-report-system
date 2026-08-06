@@ -1,0 +1,43 @@
+@model DailyWorkReport.ViewModels.ProductionOrder.ProductionOrderEditViewModel
+
+@{
+    ViewData["Title"] = "Edit Production Order";
+}
+
+<h1 class="h3 mb-3">Edit Production Order</h1>
+
+<form asp-action="Edit" method="post" class="col-md-6">
+    <input asp-for="Id" type="hidden" />
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <div class="mb-3">
+        <label asp-for="OrderNumber" class="form-label"></label>
+        <input asp-for="OrderNumber" class="form-control" />
+        <span asp-validation-for="OrderNumber" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <lable asp-for="ProductCode" class="form-lable"></lable>
+        <input asp-for="ProductCode" id="productCode" class="form-control" autocomplete="off" />
+        <span asp-validation-for="ProductCode" class="text-danger"></span>
+        <span id="productCodeError" class="text-danger small"></span>
+    </div>
+    <div class="mb-3">
+        <lable class="form-lable" for="productName">Product Name</lable>
+        <input id="productName" class="form-control" disabled />
+        <input asp-for="ProductId" id="productId" type="hidden" />
+        <span asp-validation-for="ProductId" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="OrderQty" class="form-label"></label>
+        <input asp-for="OrderQty" class="form-control" />
+        <span asp-validation-for="OrderQty" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="DueDate" class="form-label"></label>
+        <input asp-for="DueDate" type="date" class="form-control" />
+        <span asp-validation-for="DueDate" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
