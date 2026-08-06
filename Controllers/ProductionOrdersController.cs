@@ -87,6 +87,16 @@ public class ProductionOrdersController : Controller
         return View(vm);
 
     }
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, ProductionOrderEditViewModel vm)
+    {
+        if(id != vm.Id)
+        {
+            return BadRequest();
+        }
+        
+    }
 
     [HttpGet]
     public async Task<IActionResult> FindProductByCode(string code)
