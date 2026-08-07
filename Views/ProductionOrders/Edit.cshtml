@@ -41,3 +41,36 @@
     <a asp-action="Index" class="btn btn-secondary">Cancel</a>
 </form>
 
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById('productCode').addEventListener('blur', async function () {
+            const code = this.value.trim();
+            const errorEl = document.getElementById('productCodeError');
+            const nameEl = document.getElementById('productName');
+            const idEl = document.getElementById('productId');
+
+            errorEl.textContent = '';
+            nameEl.value = '';
+            idEl.value = '';
+
+            if(!code) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/ProductionOreders/FindProductByCode?code=${encodeURIComponent(code)}`);
+                if(response.ok) {
+                    const product = await response.json();
+                    nameEl.value = product.name;
+                    idEl.value = product.id;
+                } else {
+                    errorEl.textContent = 'Product not found.';
+                }
+            } catch {
+                errorEl.textContent = 'Failed to check product code. Please try again.';
+            }
+        });
+    </script>
+}
