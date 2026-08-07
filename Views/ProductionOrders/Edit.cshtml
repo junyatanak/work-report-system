@@ -16,14 +16,14 @@
         <span asp-validation-for="OrderNumber" class="text-danger"></span>
     </div>
     <div class="mb-3">
-        <lable asp-for="ProductCode" class="form-lable"></lable>
+        <label asp-for="ProductCode" class="form-label"></label>
         <input asp-for="ProductCode" id="productCode" class="form-control" autocomplete="off" />
         <span asp-validation-for="ProductCode" class="text-danger"></span>
         <span id="productCodeError" class="text-danger small"></span>
     </div>
     <div class="mb-3">
-        <lable class="form-lable" for="productName">Product Name</lable>
-        <input id="productName" class="form-control" disabled />
+        <label class="form-label" for="productName">Product Name</label>
+        <input asp-for="ProductName" id="productName" class="form-control" disabled />
         <input asp-for="ProductId" id="productId" type="hidden" />
         <span asp-validation-for="ProductId" class="text-danger"></span>
     </div>
@@ -60,7 +60,7 @@
             }
 
             try {
-                const response = await fetch(`/ProductionOreders/FindProductByCode?code=${encodeURIComponent(code)}`);
+                const response = await fetch(`/ProductionOrders/FindProductByCode?code=${encodeURIComponent(code)}`);
                 if(response.ok) {
                     const product = await response.json();
                     nameEl.value = product.name;

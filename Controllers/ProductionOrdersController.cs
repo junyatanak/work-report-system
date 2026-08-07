@@ -80,6 +80,7 @@ public class ProductionOrdersController : Controller
             Id = productionOrder.Id,
             OrderNumber = productionOrder.OrderNumber,
             ProductCode = productionOrder.Product.ProductCode,
+            ProductName = productionOrder.Product.Name,
             ProductId = productionOrder.ProductId,
             OrderQty = productionOrder.OrderQty,
             DueDate = productionOrder.DueDate
