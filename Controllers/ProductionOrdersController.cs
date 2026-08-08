@@ -149,6 +149,26 @@ public class ProductionOrdersController : Controller
         return View(vm);
     }
 
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        var productionOrder = await _context.ProductionOrders.FindAsync(id);
+        if(productionOrder == null)
+        {
+            return NotFound();
+        }
+        if(await _context.WorkReports.AnyAsync(w => w.ProductionOrderId == id))
+        {
+            return Forbid();
+        }
+
+        _context.ProductionOrders.Remove(productionOrder);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Index));
+    }
+
     public async Task<IActionResult> FindProductByCode(string code)
     {
         var product = await _context.Products

@@ -1,0 +1,26 @@
+@model DailyWorkReport.ViewModels.ProductionOrder.ProductionOrderDisplayViewModel
+
+@{
+    ViewData["Title"] = "Delete Production Order";
+}
+
+<h1 class="h3 mb-3">Delete Production Order</h1>
+
+<p class="text-danger">Are you sure you want to delete this production order?</p>
+
+<dl class="row col-md-6">
+    <dt class="col-sm-4">Order Number:</dt>
+    <dd class="col-sm-8">@Model.OrderNumber</dd>
+    <dt class="col-sm-4">Product Name:</dt>
+    <dd class="col-sm-8">@Model.ProductName</dd>
+    <dt class="col-sm-4">Order Quantity:</dt>
+    <dd class="col-sm-8">@Model.OrderQty</dd>
+    <dt class="col-sm-4">Due Date:</dt>
+    <dd class="col-sm-8">@Model.DueDate.ToString("yyyy-MM-dd")</dd>
+</dl>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
