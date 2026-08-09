@@ -1,11 +1,13 @@
 using DailyWorkReport.Data;
 using DailyWorkReport.Models;
 using DailyWorkReport.ViewModels.ProductionOrder;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace DailyWorkReport.Controllers;
 
+[Authorize]
 public class ProductionOrdersController : Controller
 {
     private readonly ApplicationDbContext _context;
@@ -42,8 +44,14 @@ public class ProductionOrdersController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(ProductionOrderCreateViewModel vm)
     {
+        if(await _context.ProductionOrders.AnyAsync(po => po.OrderNumber == vm.OrderNumber))
+        {
+            ModelState.AddModelError(nameof(vm.OrderNumber), "This order number already exists.");
+        }
+
         if (!ModelState.IsValid)
         {
+            await RepopulateProductNameAsync(vm.ProductId, name => vm.ProductName = name);
             return View(vm);
         }
 
@@ -100,8 +108,13 @@ public class ProductionOrdersController : Controller
         {
             return Forbid();
         }
+        if(await _context.ProductionOrders.AnyAsync(po => po.OrderNumber == vm.OrderNumber && po.Id != id))
+        {
+            ModelState.AddModelError(nameof(vm.OrderNumber), "This order number already exists.");
+        }
         if (!ModelState.IsValid)
         {
+            await RepopulateProductNameAsync(vm.ProductId, name => vm.ProductName = name);  
             return View(vm);
         }
 
@@ -182,4 +195,24 @@ public class ProductionOrdersController : Controller
 
         return Json(product);
     }
+
+    private async Task RepopulateProductNameAsync(int? productId, Action<string> setName)
+    {
+        if(productId is null)
+        {
+            return;
+        }
+
+        var name = await _context.Products
+            .Where(p => p.Id == productId)
+            .Select(p => p.Name)
+            .FirstOrDefaultAsync();
+
+        if(name is not null)
+        {
+            setName(name);
+        }
+    }
+
+
 }

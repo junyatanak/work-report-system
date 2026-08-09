@@ -12,6 +12,7 @@ public class ProductionOrderCreateViewModel
     [Required(ErrorMessage = "Product code is required.")]
     [Display(Name = "Product Code")]
     public string ProductCode { get; set; } = string.Empty;
+    public string ProductName { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Please enter a valid product code.")]
     public int? ProductId { get; set; }

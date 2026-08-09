@@ -24,7 +24,7 @@
 
     <div class="mb-3">
         <label class="form-label" for="productName">Product Name</label>
-        <input id="productName" class="form-control" disabled />
+        <input asp-for="ProductName" id="productName" class="form-control" disabled />
         <input asp-for="ProductId" id="productId" type="hidden" />
         <span asp-validation-for="ProductId" class="text-danger"></span>
     </div>
