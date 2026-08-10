@@ -39,4 +39,29 @@ public class WorkReportsController : Controller
         return Json(result);
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetProcessOptions(int workClassId)
+    {
+        var processes = await _context.StandardWorkTimes
+            .Where(s => s.WorkClassId == workClassId)
+            .Select(s => new{ s.ProcessId, s.Process.Name })
+            .Distinct()
+            .OrderBy(p => p.Name)
+            .ToListAsync();
+
+        return Json(processes);
+    }
+    [HttpGet]
+    public async Task<IActionResult> GetWorkPatternOptions(int workClassId, int processId)
+    {
+        var workPatterns = await _context.StandardWorkTimes
+            .Where(s => s.WorkClassId == workClassId && s.ProcessId == processId)
+            .Select(s => new { s.WorkPatternId, s.WorkPattern.Name })
+            .Distinct()
+            .OrderBy(w => w.Name)
+            .ToListAsync();
+
+        return Json(workPatterns);
+    }
+
 }
