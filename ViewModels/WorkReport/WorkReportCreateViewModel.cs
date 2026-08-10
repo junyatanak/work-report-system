@@ -28,5 +28,5 @@ public class WorkReportCreateViewModel
 
     public List<SelectListItem> ProcessOptions { get; set; } = new ();
     public List<SelectListItem> WorkPatternOptions { get; set; } = new ();
-    public List<SelectListItem> WorkerOptions { get; set; } = new ();
+    
 }
