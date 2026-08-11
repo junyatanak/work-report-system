@@ -3,15 +3,27 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Authorization;
+using DailyWorkReport.ViewModels.WorkReport;
+using DailyWorkReport.Models;
+using Microsoft.AspNetCore.Identity;
+
 
 namespace DailyWorkReport.Controllers;
-
+[Authorize]
 public class WorkReportsController : Controller
 {
     private readonly ApplicationDbContext _context;
-    public WorkReportsController(ApplicationDbContext context)
+    private readonly UserManager<ApplicationUser> _userManager;
+    public WorkReportsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
     {
         _context = context;
+        _userManager = userManager;
+    }
+
+    public IActionResult Create()
+    {
+        var vm = new WorkReportCreateViewModel();
+        return View(vm);
     }
 
     [HttpGet]
@@ -62,6 +74,21 @@ public class WorkReportsController : Controller
             .ToListAsync();
 
         return Json(workPatterns);
+    }
+    [HttpGet]
+    public async Task<IActionResult> FindWorkerByNumber(int workerNumber)
+    {
+        var worker = await _context.Workers
+            .Where(w => w.WorkerNumber == workerNumber)
+            .Select(w => new{ w.Id, w.Name})
+            .FirstOrDefaultAsync();
+
+        if(worker == null)
+        {
+            return NotFound();
+        }
+
+        return Json(worker);
     }
 
 }
