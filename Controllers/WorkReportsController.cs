@@ -26,6 +26,41 @@ public class WorkReportsController : Controller
         return View(vm);
     }
 
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(WorkReportCreateViewModel vm)
+    {
+        await RepopulateProductionOrderDataAsync(vm);
+
+        if(!vm.WorkReportWorkers.Any())
+        {
+            ModelState.AddModelError(string.Empty, "At least one worker is required.");
+        }
+
+        for(int i = 0; i < vm.WorkReportWorkers.Count; i++)
+        {
+            var worker = vm.WorkReportWorkers[i];
+            if(worker.StartAt == worker.EndAt)
+            {
+                ModelState.AddModelError($"WorkReportWorkers[{i}].EndAt", "Start time and end time cannot be the same.");
+                continue;
+            }
+
+            var (startAt, endAt) = ResolveShiftDateTime(vm.WorkDate, worker.StartAt, worker.EndAt);
+            if((endAt - startAt).TotalHours > 12)
+            {
+                ModelState.AddModelError($"WorkReportWorkers[{i}].EndAt", "The work duration exceed 12 hours. Please check the start and end times.");
+            }
+        }
+
+        if(!ModelState.IsValid)
+        {
+            return View(vm);
+        }
+
+        // Continue with the rest of the logic...
+    }
+
     [HttpGet]
     public async Task<IActionResult> FindProductionOrderByNumber(string orderNumber)
     {
