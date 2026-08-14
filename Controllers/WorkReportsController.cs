@@ -53,8 +53,19 @@ public class WorkReportsController : Controller
             }
         }
 
+        if(vm.ProductionOrderId is not null && vm.OrderQty is not null)
+        {
+            var totalProducedQty = vm.WorkReportWorkers.Sum(w => w.ProducedQty ?? 0);
+            if(totalProducedQty > vm.OrderQty)
+            {
+                ModelState.AddModelError(string.Empty, "Total produced quantity exceedes the order quantity.");
+            } 
+        }
+
         if(!ModelState.IsValid)
         {
+            await RepopulateProcessWorkPatternOptionsAsync(vm);
+            await RepopulateWorkerNamesAsync(vm);
             return View(vm);
         }
 
