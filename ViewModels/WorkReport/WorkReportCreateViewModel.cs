@@ -5,6 +5,7 @@ namespace DailyWorkReport.ViewModels.WorkReport;
 
 public class WorkReportCreateViewModel
 {
+    [Required(ErrorMessage = "Work date is required.")]
     public DateOnly WorkDate { get; set; } = DateOnly.FromDateTime(DateTime.Today);
     [Required(ErrorMessage = "Production order number is required.")]
     public string ProductionOrderNumber {get; set;} = string.Empty;
@@ -28,5 +29,5 @@ public class WorkReportCreateViewModel
 
     public List<SelectListItem> ProcessOptions { get; set; } = new ();
     public List<SelectListItem> WorkPatternOptions { get; set; } = new ();
-    
+
 }
