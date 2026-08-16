@@ -42,6 +42,108 @@
                     <span id="productionOrderError" class="text-danger small"></span>
                 </div>
             </div>
+
+            <input asp-for="ProductionOrderId" id="productionOrderId" type="hidden" />
+            <input asp-for="WorkClassId" id="workClassId" type="hidden" />
+            <span asp-validation-for="ProductionOrderId" class="text-danger"></span>
+
+            <hr class="my-3" />
+
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label small text-muted" for="productCode">Product Code</label>
+                    <input asp-for="ProductCode" id="productCode" class="form-control form-control-sm bg-light" disabled />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small text-muted" for="productName">Product Name</label>
+                    <input asp-for="ProductName" id="productName" class="form-control form-control-sm bg-light" disabled />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small text-muted" for="orderQty">Order Qty</label>
+                    <input asp-for="OrderQty" id="orderQty" class="form-control form-control-sm bg-light" disabled />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small text-muted" for="dueDate">Due Date</label>
+                    <input asp-for="DueDate" id="dueDate" class="form-control form-control-sm bg-light" disabled />
+                </div>
+            </div>
         </div>
     </div>
+
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <h2 class="h6 text-uppercase text-muted mb-3">
+                <i class="bi bi-gear me-1"></i>Work Details
+            </h2>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label small text-muted" for="workClassName">Work Class</label>
+                    <input asp-for="WorkClassName" id="workClassName" class="form-control form-control-sm bg-light" disabled />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="processId">Process</label>
+                    <select asp-for="ProcessId" id="processId" asp-items="Model.ProcessOptions" class="form-select" disabled>
+                        <option value="">-- Select production order first --</option>
+                    </select>
+                    <span asp-validation-for="ProcessId" class="text-danger"></span>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="workPatternId">Work Pattern</label>
+                    <select asp-for="WorkPatternId" id="workPatternId" asp-items="Model.WorkPatternOptions" class="form-select" disabled>
+                        <option value="">-- Select process first --</option>
+                    </select>
+                    <span asp-validation-for="WorkPatternId" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="h6 text-uppercase text-muted mb-0">
+                    <i class="bi bi-people me-1"></i>Workers
+                </h2>
+                <button type="button" id="addWorkerBtn" class="btn btn-primary btn-sm">
+                    <i class="bi bi-plus-lg me-1"></i>Add Worker
+                </button>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" id="workersTable">
+                    <thead>
+                        <tr class="text-muted small text-uppercase">
+                            <th style="width: 12%;">Worker No.</th>
+                            <th style="width: 18%;">Worker Name</th>
+                            <th style="width: 13%;">Start</th>
+                            <th style="width: 13%;">End</th>
+                            <th style="width: 14%;">Break</th>
+                            <th style="width: 15%;">Produced Qty</th>
+                            <th style="width: 5%;"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="workersTableBody">
+                        <!-- JavaScriptで行を追加 -->
+                    </tbody>
+                </table>
+            </div>
+
+            <p id="noWorkersMessage" class="text-muted text-center small py-3 mb-0">
+                No workers added yet. Click "Add Worker" to get started.
+            </p>
+        </div>
+    </div>
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary px-4">
+            <i class="bi bi-check-lg me-1"></i>Save
+        </button>
+        <a asp-action="Index" class="btn btn-outline-secondary px-4">Cancel</a>
+    </div>
 </form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+
+    </script>
+}
