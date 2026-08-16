@@ -262,7 +262,7 @@ public class WorkReportsController : Controller
             .ToListAsync();
     }
 
-    private async Task RepopulateWorkerNameAsync(WorkReportCreateViewModel vm)
+    private async Task RepopulateWorkerNamesAsync(WorkReportCreateViewModel vm)
     {
         var workerIds = vm.WorkReportWorkers
             .Where(w => w.WorkerId is not null)

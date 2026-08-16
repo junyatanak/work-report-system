@@ -1,0 +1,47 @@
+@model DailyWorkReport.ViewModels.WorkReport.WorkReportCreateViewModel
+
+@{
+    ViewData["Title"] = "Create Work Report";
+}
+
+<h1 class="h3 mb-4">
+    <i class="bi bi-file-earmark-plus text-primary me-2"></i>Create Work Report
+</h1>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <h2 class="h6 text-uppercase text-muted mb-3">Basic Info</h2>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Reporter</label>
+                    <input class="form-control" value="@User.Identity!.Name" disabled />
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="WorkDate" class="form-label"></label>
+                    <input asp-for="WorkDate" type="date" class="form-control" />
+                    <span asp-validation-for="WorkDate" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <h2 class="h6 text-uppercase text-muted mb-3">
+                <i class="bi bi-clipboard-check me-1"></i>Production Order
+            </h2>
+
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label asp-for="ProductionOrderNumber" class="form-label"></label>
+                    <input asp-for="ProductionOrderNumber" id="productionOrderNumber" class="form-control" autocomplete="off" placeholder="Enter order number" />
+                    <span asp-validation-for="ProductionOrderNumber" class="text-danger"></span>
+                    <span id="productionOrderError" class="text-danger small"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
