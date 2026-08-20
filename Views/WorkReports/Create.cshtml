@@ -144,6 +144,29 @@
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
     <script>
+        let workerIndex = 0;
+
+        function createWorkerRow(){
+            const index = workerIndex++;
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>
+                    <input type="number" name="WorkReportWorker[${index}].WorkerNumber" class="form-control form-control-sm worker-number" autocomplete="off" />
+                    <span class="text-danger small worker-number-error"></span>
+                </td>
+                <td>
+                    <input type="text" class="form-control form-control-sm bg-light worker-name" disabled />
+                    <input type="hidden" name="WorkReportWorkers[${index}].WorkerId" class="worker-id" />
+                </td>
+                <td>
+                    <input type="time" name="WorkReportWorkers[${index}].StartAt" class="form-control form-control-sm"/>
+                </td>
+                <td>
+                    <input type="time" name="WorkReportWorkers[${index}].EndAt" class="form-control form-control-sm"/>
+                </td>
+
+            
+        }
 
     </script>
 }
