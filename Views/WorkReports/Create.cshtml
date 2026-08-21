@@ -164,9 +164,31 @@
                 <td>
                     <input type="time" name="WorkReportWorkers[${index}].EndAt" class="form-control form-control-sm"/>
                 </td>
-
-            
+                <td>
+                    <select name="WorkReportWorkers[${index}].BreakMinutes" class="form-select form-select-sm">
+                        <option value="0">0 min</option>
+                        <option value="30">30 min</option>
+                        <option value="40">40 min</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="number" name="WorkReportWorkers[${index}].ProducedQty" class="form-control form-control-sm" />
+                </td>
+                <td>
+                    <button type="button" class="btn btn-outline-danger btn-sm remove-worker-btn">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                <td/>
+            `;
+            return tr;
         }
+            
+        function updateNoWorkersMessage(){
+            const tbody = document.getElementById('workersTableBody');
+            const message = document.getElementById('noWorkersMessage');
+            message.style.display = tbody.children.length === 0 ? 'block' : 'none';
+        }
+        
 
     </script>
 }
