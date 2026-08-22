@@ -151,7 +151,7 @@
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td>
-                    <input type="number" name="WorkReportWorker[${index}].WorkerNumber" class="form-control form-control-sm worker-number" autocomplete="off" />
+                    <input type="number" name="WorkReportWorkers[${index}].WorkerNumber" class="form-control form-control-sm worker-number" autocomplete="off" />
                     <span class="text-danger small worker-number-error"></span>
                 </td>
                 <td>
@@ -178,7 +178,7 @@
                     <button type="button" class="btn btn-outline-danger btn-sm remove-worker-btn">
                         <i class="bi bi-trash"></i>
                     </button>
-                <td/>
+                </td>
             `;
             return tr;
         }
@@ -188,7 +188,21 @@
             const message = document.getElementById('noWorkersMessage');
             message.style.display = tbody.children.length === 0 ? 'block' : 'none';
         }
-        
 
+        document.getElementById('addWorkerBtn').addEventListener('click', function(){
+            const tbody = document.getElementById('workersTableBody');
+            tbody.appendChild(createWorkerRow());
+            updateNoWorkersMessage();
+        });
+
+        document.getElementById('workersTableBody').addEventListener('click', function(event){
+            const button = event.target.closest('.remove-worker-btn');
+            if(button){
+                button.closest('tr').remove();
+                updateNoWorkersMessage();
+            }
+        });
+
+        updateNoWorkersMessage();
     </script>
 }
