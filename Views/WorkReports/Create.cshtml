@@ -109,6 +109,23 @@
                 </button>
             </div>
 
+            @{
+                var workerErrorKeys = ViewData.ModelState.Keys
+                    .Where(k => k.StartsWith("WorkReportWorkers"))
+                    .ToList();
+            }
+            @if(workerErrorKeys.Any()){
+                <div class="alert alert-danger py-2">
+                    <ul class="mb-0 ps-3">
+                        @foreach(var key in workerErrorKeys){
+                            foreach(var error in ViewData.ModelState[key]!.Errors){
+                                <li>@error.ErrorMessage</li>
+                            }
+                        }
+                    </ul>
+                </div>
+            }
+
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0" id="workersTable">
                     <thead>
