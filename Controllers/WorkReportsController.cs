@@ -43,32 +43,32 @@ public class WorkReportsController : Controller
 
             if(worker.WorkerNumber is null)
             {
-                ModelState.AddModelError($"WorkReportWorkers[{i}].WorkerNumber", "Worker number is required.");
+                ModelState.AddModelError($"WorkReportWorkers[{i}].WorkerNumber", $"Row {i + 1}: Worker number is required.");
                 continue;
             }
 
             if(worker.WorkerId is null)
             {
-                ModelState.AddModelError($"WorkReportWorkers[{i}].WorkerNumber", "Please enter a valid worker number.");
+                ModelState.AddModelError($"WorkReportWorkers[{i}].WorkerNumber", $"Row {i + 1}: Please enter a valid worker number.");
                 continue;
             }
 
             if(worker.ProducedQty is null)
             {
-                ModelState.AddModelError($"WorkReportWorkers[{i}].ProducedQty", "Produced quantity is required.");
+                ModelState.AddModelError($"WorkReportWorkers[{i}].ProducedQty", $"Row {i + 1}: Produced quantity is required.");
                 continue;
             }
 
             if(worker.StartAt == worker.EndAt)
             {
-                ModelState.AddModelError($"WorkReportWorkers[{i}].EndAt", "Start time and end time cannot be the same.");
+                ModelState.AddModelError($"WorkReportWorkers[{i}].EndAt", $"Row {i + 1}: Start time and end time cannot be the same.");
                 continue;
             }
 
             var (startAt, endAt) = ResolveShiftDateTime(vm.WorkDate, worker.StartAt, worker.EndAt);
             if((endAt - startAt).TotalHours > 12)
             {
-                ModelState.AddModelError($"WorkReportWorkers[{i}].EndAt", "The work duration exceed 12 hours. Please check the start and end times.");
+                ModelState.AddModelError($"WorkReportWorkers[{i}].EndAt", $"Row {i + 1}: The work duration exceed 12 hours. Please check the start and end times.");
             }
         }
 
