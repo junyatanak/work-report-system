@@ -140,7 +140,41 @@
                         </tr>
                     </thead>
                     <tbody id="workersTableBody">
-                        <!-- JavaScriptで行を追加 -->
+                        @for (int i = 0; i < Model.WorkReportWorkers.Count; i++)
+                        {
+                            var worker = Model.WorkReportWorkers[i];
+                            <tr>
+                                <td>
+                                    <input type="number" name="WorkReportWorkers[@i].WorkerNumber" value="@worker.WorkerNumber" class="form-control form-control-sm worker-number" autocomplete="off" />
+                                    <span class="text-danger small worker-number-error"></span>
+                                </td>
+                                <td>
+                                    <input type="text" value="@worker.WorkerName" class="form-control form-control-sm bg-light worker-name" disabled />
+                                    <input type="hidden" name="WorkReportWorkers[@i].WorkerId" value="@worker.WorkerId" class="worker-id" />
+                                </td>
+                                <td>
+                                    <input type="time" name="WorkReportWorkers[@i].StartAt" value="@worker.StartAt.ToString("HH:mm")" class="form-control form-control-sm" />
+                                </td>
+                                <td>
+                                    <input type="time" name="WorkReportWorkers[@i].EndAt" value="@worker.EndAt.ToString("HH:mm")" class="form-control form-control-sm" />
+                                </td>
+                                <td>
+                                    <select name="WorkReportWorkers[@i].BreakMinutes" class="form-select form-select-sm">
+                                        <option value="0" selected="@(worker.BreakMinutes == 0)">0 min</option>
+                                        <option value="30" selected="@(worker.BreakMinutes == 30)">30 min</option>
+                                        <option value="40" selected="@(worker.BreakMinutes == 40)">40 min</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="number" name="WorkReportWorkers[@i].ProducedQty" value="@worker.ProducedQty" class="form-control form-control-sm" />
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-outline-danger btn-sm remove-worker-btn">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }                       
                     </tbody>
                 </table>
             </div>
@@ -161,7 +195,7 @@
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
     <script>
-        let workerIndex = 0;
+        let workerIndex = @Model.WorkReportWorkers.Count;
 
         function createWorkerRow(){
             const index = workerIndex++;
