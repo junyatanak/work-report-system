@@ -254,6 +254,65 @@
             }
         });
 
+        document.getElementById('productionOrderNumber').addEventListener('blur', async function(){
+            const orderNumber = this.value.trim();
+            const errorEl = document.getElementById('productionOrderError');
+
+            const productCodeEl = document.getElementById('productCode');
+            const productNameEl = document.getElementById('productName');
+            const orderQtyEl = document.getElementById('orderQty');
+            const dueDateEl = document.getElementById('dueDate');
+            const workClassNameEl = document.getElementById('workClassName');
+            const productionOrderIdEl = document.getElementById('productionOrderId');
+            const workClassIdEl = document.getElementById('workClassId');
+            const processSelectEl = document.getElementById('processId');
+            const workPatternSelectEl = document.getElementById('workPatternId');
+            
+            errorEl.textContent = '';
+            productCodeEl.value = '';
+            productNameEl.value = '';
+            orderQtyEl.value = '';
+            dueDateEl.value = '';
+            workClassNameEl.value = '';
+            productionOrderIdEl.value = '';
+            workClassIdEl.value = '';
+
+            resetSelect(processSelectEl, '-- Select production order first --');
+            resetSelect(workPatternSelectEl, '-- Select process first --');
+
+            if(!orderNumber){
+                return;
+            }
+
+            try{
+                const response = await fetch(`/WorkReports/FindProductionOrderByNumber?orderNumber=${encodeURIComponent(orderNumber)}`);
+
+                if(response.ok){
+                    const order = await response.json();
+                    
+                    productCodeEl.value = order.productCode;
+                    productNameEl.value = order.productName;
+                    orderQtyEl.value = order.orderQty;
+                    dueDateEl.value = order.dueDate;
+                    workClassNameEl.value = order.workClassName;
+                    productionOrderIdEl.value = order.productionOrderId;
+                    workClassIdEl.value = order.workClassId;
+
+                    await loadProcessOptions(order.workClassId);
+                } else {
+                    errorEl.textContent = 'Production order not found.';
+                }
+            } catch {
+                errorEl.textContent = 'Failed to check production order number. Please try again.';
+            }
+        });
+
+        function resetSelect(selectEl, placeholderText) {
+            selectEl.innerHTML = `<option value="">${placeholderText}</option>`;
+            selectEl.disabled = true;
+        }
+        
+
         updateNoWorkersMessage();
     </script>
 }
