@@ -311,7 +311,25 @@
             selectEl.innerHTML = `<option value="">${placeholderText}</option>`;
             selectEl.disabled = true;
         }
-        
+        async function loadProcessOptions(workClassId) {
+            const processSelectEl = document.getElementById('processId');
+
+            try {
+                const response = await fetch(`/WorkReports/GetProcessOptions?workClassId=${workClassId}`);
+                const processes = await response.json();
+
+                processSelectEl.innerHTML = '<option value="">-- Select --</option>';
+                processes.forEach(p => {
+                    const option = document.createElement('option');
+                    option.value = p.processId;
+                    option.textContent = p.name;
+                    processSelectEl.appendChild(option);
+                });
+                processSelectEl.disabled = false;
+            } catch {
+                processSelectEl.innerHTML = '<option value="">-- Failed to load --</option>';
+            }
+        }
 
         updateNoWorkersMessage();
     </script>
