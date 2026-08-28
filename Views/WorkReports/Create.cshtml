@@ -82,14 +82,14 @@
                 </div>
                 <div class="col-md-4">
                     <label class="form-label" for="processId">Process</label>
-                    <select asp-for="ProcessId" id="processId" asp-items="Model.ProcessOptions" class="form-select" disabled>
+                    <select asp-for="ProcessId" id="processId" asp-items="Model.ProcessOptions" class="form-select" disabled="@(!Model.ProcessOptions.Any())">
                         <option value="">-- Select production order first --</option>
                     </select>
                     <span asp-validation-for="ProcessId" class="text-danger"></span>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label" for="workPatternId">Work Pattern</label>
-                    <select asp-for="WorkPatternId" id="workPatternId" asp-items="Model.WorkPatternOptions" class="form-select" disabled>
+                    <select asp-for="WorkPatternId" id="workPatternId" asp-items="Model.WorkPatternOptions" class="form-select" disabled="@(!Model.WorkPatternOptions.Any())">
                         <option value="">-- Select process first --</option>
                     </select>
                     <span asp-validation-for="WorkPatternId" class="text-danger"></span>
@@ -330,6 +330,34 @@
                 processSelectEl.innerHTML = '<option value="">-- Failed to load --</option>';
             }
         }
+
+        document.getElementById('processId').addEventListener('change', async function() {
+            const processId = this.value;
+            const workClassId = document.getElementById('workClassId').value;
+            const workPatternSelectEl = document.getElementById('workPatternId');
+
+            resetSelect(workPatternSelectEl, '-- Select process first --');
+
+            if(!processId || !workClassId){
+                return ;
+            }
+
+            try{
+                const response = await fetch(`/WorkReports/GetWorkPatternOptions?workClassId=${workClassId}&processId=${processId}`);
+                const workPatterns = await response.json();
+
+                workPatternSelectEl.innerHTML = '<option value="">-- Select --</option>';
+                workPatterns.forEach(w => {
+                    const option = document.createElement('option');
+                    option.value = w.workPatternId;
+                    option.textContent = w.name;
+                    workPatternSelectEl.appendChild(option);
+                });
+                workPatternSelectEl.disabled = false;
+            } catch {
+                workPatternSelectEl.innerHTML = '<option value="">-- Failed to load --</option>';
+            }
+        });
 
         updateNoWorkersMessage();
     </script>

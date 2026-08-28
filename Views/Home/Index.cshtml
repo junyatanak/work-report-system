@@ -8,39 +8,53 @@
     <p class="lead text-muted">Record and manage your daily work, simply and accurately</p>
 </div>
 
-<div class="row g-4 mt-3">
-    <div class="col-md-4">
-        <div class="card h-100 shadow-sm border-0">
-            <div class="card-body text-center">
-                <i class="bi bi-file-text display-6 text-primary mb-3"></i>
-                <h5 class="card-title">Work Report</h5>
-                <p class="card-text text-muted">Record your daily work here</p>
-                <a asp-controller="WorkReports" asp-action="Index" class="btn btn-primary btn-sm">Open</a>
+@if (User.Identity?.IsAuthenticated == true)
+{
+    <div class="row g-4 mt-3">
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body text-center">
+                    <i class="bi bi-file-text display-6 text-primary mb-3"></i>
+                    <h5 class="card-title">Work Report</h5>
+                    <p class="card-text text-muted">Record your daily work here</p>
+                    <a asp-controller="WorkReports" asp-action="Index" class="btn btn-primary btn-sm">Open</a>
+                </div>
             </div>
         </div>
+
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body text-center">
+                    <i class="bi bi-box-seam display-6 text-primary mb-3"></i>
+                    <h5 class="card-title">Production Order</h5>
+                    <p class="card-text text-muted">View and manage production orders</p>
+                    <a asp-controller="ProductionOrders" asp-action="Index" class="btn btn-primary btn-sm">Open</a>
+                </div>
+            </div>
+        </div>
+
+        @if (User.IsInRole("Admin"))
+        {
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <i class="bi bi-database display-6 text-primary mb-3"></i>
+                        <h5 class="card-title">Master Data</h5>
+                        <p class="card-text text-muted">Manage processes, products, and other master data</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <i class="bi bi-people display-6 text-primary mb-3"></i>
+                        <h5 class="card-title">Users</h5>
+                        <p class="card-text text-muted">Manage user accounts</p>
+                        <a asp-controller="Users" asp-action="Index" class="btn btn-primary btn-sm">Open</a>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
-
-    @if (User.IsInRole("Admin"))
-    {
-        <div class="col-md-4">
-            <div class="card h-100 shadow-sm border-0">
-                <div class="card-body text-center">
-                    <i class="bi bi-database display-6 text-primary mb-3"></i>
-                    <h5 class="card-title">Master Data</h5>
-                    <p class="card-text text-muted">Manage processes, products, and other master data</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card h-100 shadow-sm border-0">
-                <div class="card-body text-center">
-                    <i class="bi bi-people display-6 text-primary mb-3"></i>
-                    <h5 class="card-title">Users</h5>
-                    <p class="card-text text-muted">Manage user accounts</p>
-                    <a asp-controller="Users" asp-action="Index" class="btn btn-primary btn-sm">Open</a>
-                </div>
-            </div>
-        </div>
-    }
-</div>
+}
