@@ -359,6 +359,41 @@
             }
         });
 
+        document.getElementById('workersTableBody').addEventListener('blur', async function (event){
+            if(!event.target.classList.contains('worker-number')){
+                return;
+            }
+
+            const input = event.target;
+            const workerNumber = input.value.trim();
+            const row = input.closest('tr');
+            const errorEl = row.querySelector('.worker-number-error');
+            const nameEl = row.querySelector('.worker-name');
+            const idEl = row.querySelector('.worker-id');
+
+            errorEl.textContent = '';
+            nameEl.value = '';
+            idEl.value = '';
+
+            if(!workerNumber){
+                return;
+            }
+
+            try {
+                const response = await fetch(`/WorkReports/FindWorkerByNumber?workerNumber=${encodeURIComponent(workerNumber)}`);
+
+                if(response.ok) {
+                    const worker = await response.json();
+                    nameEl.value = worker.name ?? '';
+                    idEl.value = worker.id;
+                } else {
+                    errorEl.textContent = 'Worker not found.';
+                }
+            } catch {
+                errorEl.textContent = 'Failed to check worker number. Please try again.';
+            }
+        }, true);
+
         updateNoWorkersMessage();
     </script>
 }
