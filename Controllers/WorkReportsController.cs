@@ -20,6 +20,19 @@ public class WorkReportsController : Controller
         _userManager = userManager;
     }
 
+    public async Task<IActionResult> Index(WorkReportIndexFilterViewModel filter)
+    {
+        var query = _context.WorkReports
+            .Include(w => w.ProductionOrder)
+                .ThenInclude(po => po.Product)
+            .Include(w => w.Process)
+            .Include(w => w.User)
+            .Include(w => w.WorkReportWorkers)
+            .AsQueryable();
+        
+        
+    }
+
     public IActionResult Create()
     {
         var vm = new WorkReportCreateViewModel();
