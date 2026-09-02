@@ -1,0 +1,114 @@
+@model DailyWorkReport.ViewModels.WorkReport.WorkReportIndexViewModel
+
+@{
+    ViewData["Title"] = "Work Reports";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Work Reports</h1>
+    <a asp-action="Create" class="btn btn-primary btn-sm">
+        <i class="bi bi-plus-lg me-1"></i>New Report
+    </a>
+</div>
+
+<form asp-action="Index" method="get" class="card shadow-sm border-0 mb-3">
+    <div class="card-body py-2">
+        <div class="row g-2 align-items-end">
+            <div class="col-auto">
+                <label class="form-label small text-muted mb-0">From</label>
+                <input asp-for="Filter.WorkDateFrom" type="date" class="form-control form-control-sm" />
+            </div>
+            <div class="col-auto">
+                <label class="form-label small text-muted mb-0">To</label>
+                <input asp-for="Filter.WorkDateTo" type="date" class="form-control form-control-sm" />
+            </div>
+            <div class="col-auto">
+                <label class="form-label small text-muted mb-0">Order No.</label>
+                <input asp-for="Filter.ProductionOrderNumber" class="form-control form-control-sm" style="width: 120px;" />
+            </div>
+            <div class="col-auto">
+                <label class="form-label small text-muted mb-0">Product</label>
+                <input asp-for="Filter.ProductName" class="form-control form-control-sm" style="width: 120px;" />
+            </div>
+            <div class="col-auto">
+                <label class="form-label small text-muted mb-0">Process</label>
+                <input asp-for="Filter.ProcessName" class="form-control form-control-sm" style="width: 120px;" />
+            </div>
+            <div class="col-auto">
+                <label class="form-label small text-muted mb-0">Reporter</label>
+                <input asp-for="Filter.ReporterName" class="form-control form-control-sm" style="width: 120px;" />
+            </div>
+            <input asp-for="Filter.SortBy" type="hidden" />
+            <input asp-for="Filter.SortDescending" type="hidden" />
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary btn-sm">Search</button>
+                <a asp-action="Index" class="btn btn-outline-secondary btn-sm">Clear</a>
+            </div>
+        </div>
+    </div>
+</form>
+
+<table class="table table-hover align-middle">
+    <thead>
+        <tr>
+            <th>@Html.Raw(SortLink("Work Date", "WorkDate"))</th>
+            <th>@Html.Raw(SortLink("Order No.", "ProductionOrderNumber"))</th>
+            <th>@Html.Raw(SortLink("Product", "ProductName"))</th>
+            <th>@Html.Raw(SortLink("Process", "ProcessName"))</th>
+            <th>@Html.Raw(SortLink("Qty", "TotalProducedQty"))</th>
+            <th>@Html.Raw(SortLink("Reporter", "ReporterName"))</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>@item.WorkDate.ToString("yyyy-MM-dd")</td>
+                <td>@item.ProductionOrderNumber</td>
+                <td>@item.ProductName</td>
+                <td>@item.ProcessName</td>
+                <td>@item.TotalProducedQty</td>
+                <td>@item.ReporterName</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-secondary btn-sm">Details</a>
+                    @if (item.CanEdit)
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary btn-sm">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger btn-sm">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (!Model.Items.Any())
+{
+    <p class="text-muted">No work reports found.</p>
+}
+
+@functions {
+    private string SortLink(string label, string column)
+    {
+        var isCurrent = Model.Filter.SortBy == column;
+        var nextDescending = isCurrent && !Model.Filter.SortDescending;
+        var icon = isCurrent ? (Model.Filter.SortDescending ? "bi-caret-down-fill" : "bi-caret-up-fill") : "";
+        
+        var routeValues = new Dictionary<string, string?>
+        {
+            ["Filter.WorkDateFrom"] = Model.Filter.WorkDateFrom?.ToString("yyyy-MM-dd"),
+            ["Filter.WorkDateTo"] = Model.Filter.WorkDateTo?.ToString("yyyy-MM-dd"),
+            ["Filter.ProductionOrderNumber"] = Model.Filter.ProductionOrderNumber,
+            ["Filter.ProductName"] = Model.Filter.ProductName,
+            ["Filter.ProcessName"] = Model.Filter.ProcessName,
+            ["Filter.ReporterName"] = Model.Filter.ReporterName,
+            ["Filter.SortBy"] = column,
+            ["Filter.SortDescending"] = nextDescending.ToString()
+        };
+
+        var url = Url.Action("Index", routeValues);
+
+        return $"<a href=\"{url}\" class=\"text-decoration-none text-dark\">{label} <i class=\"bi {icon} small\"></i></a>";
+    }
+}

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using DailyWorkReport.ViewModels.WorkReport;
 using DailyWorkReport.Models;
 using Microsoft.AspNetCore.Identity;
+using System.Linq.Expressions;
 
 
 namespace DailyWorkReport.Controllers;
@@ -30,8 +31,60 @@ public class WorkReportsController : Controller
             .Include(w => w.WorkReportWorkers)
             .AsQueryable();
         
-        
+        if (filter.WorkDateFrom is not null)
+        {
+            query = query.Where(w => w.WorkDate >= filter.WorkDateFrom);
+        }
+        if (filter.WorkDateTo is not null)
+        {
+            query = query.Where(w => w.WorkDate <= filter.WorkDateTo);
+        }
+        if (!string.IsNullOrWhiteSpace(filter.ProductionOrderNumber))
+        {
+            query = query.Where(w => w.ProductionOrder.OrderNumber.Contains(filter.ProductionOrderNumber));
+        }
+        if (!string.IsNullOrWhiteSpace(filter.ProductName))
+        {
+            query = query.Where(w => w.ProductionOrder.Product.Name.Contains(filter.ProductName));
+        }
+        if (!string.IsNullOrWhiteSpace(filter.ProcessName))
+        {
+            query = query.Where(w => w.Process.Name.Contains(filter.ProcessName));
+        }
+        if (!string.IsNullOrWhiteSpace(filter.ReporterName))
+        {
+            query = query.Where(w => (w.User.UserName ?? string.Empty).Contains(filter.ReporterName));
+        }
+
+        query = ApplySort(query, filter.SortBy, filter.SortDescending);
+
+        var currentUserId = _userManager.GetUserId(User);
+        var isAdmin = User.IsInRole("Admin");
+
+        var items = await query
+            .Select(w => new WorkReportIndexItemViewModel
+            {
+                Id = w.Id,
+                WorkDate = w.WorkDate,
+                ProductionOrderNumber = w.ProductionOrder.OrderNumber,
+                ProductName = w.ProductionOrder.Product.Name,
+                ProcessName = w.Process.Name,
+                TotalProducedQty = w.WorkReportWorkers.Sum(wr => wr.ProducedQty),
+                ReporterName = w.User.UserName ?? string.Empty,
+                CanEdit = isAdmin || w.UserId == currentUserId
+            })
+            .ToListAsync();
+
+        var vm = new WorkReportIndexViewModel
+        {
+            Filter = filter,
+            Items = items
+        };
+
+        return View(vm);        
+
     }
+
 
     public IActionResult Create()
     {
@@ -294,6 +347,22 @@ public class WorkReportsController : Controller
             }
         }
     }
+
+    private static IQueryable<WorkReport> ApplySort(IQueryable<WorkReport> query, string? sortBy, bool descending)
+    {
+        Expression<Func<WorkReport, object>> keySelector = sortBy switch
+        {
+            "ProductionOrderNumber" => w => w.ProductionOrder.OrderNumber,
+            "ProductName" => w => w.ProductionOrder.Product.Name,
+            "ProcessName" => w => w.Process.Name,
+            "TotalProducedQty" => w => w.WorkReportWorkers.Sum(wr => wr.ProducedQty),
+            "ReporterName" => w => w.User.UserName ?? string.Empty,
+            _ => w => w.WorkDate
+        };
+
+        return descending ? query.OrderByDescending(keySelector) : query.OrderBy(keySelector);
+    }
+
 
 
 
