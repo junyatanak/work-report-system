@@ -11,7 +11,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
+        <nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top" style="z-index: 1031;">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Daily Work Report</a>
                 <ul class="navbar-nav ms-auto">
@@ -39,7 +39,7 @@
     <div class="d-flex" style="margin-top: 56px;">
         @if (User.Identity?.IsAuthenticated ?? false)
         {
-            <nav class="bg-light border-end vh-100 position-fixed" style="width: 250px; top: 56px;">
+            <nav class="bg-light border-end vh-100 position-fixed" style="width: 250px; top: 56px; z-index: 1030;">
                 @await Component.InvokeAsync("SideMenu")
             </nav>
         }
