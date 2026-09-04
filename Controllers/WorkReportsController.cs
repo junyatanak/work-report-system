@@ -211,6 +211,28 @@ public class WorkReportsController : Controller
         return Json(result);
     }
 
+    public async Task<IActionResult> Details(int id)
+    {
+        var workReport = await _context.WorkReports
+            .Include(w => w.ProductionOrder)
+                .ThenInclude(po => po.Product)
+                    .ThenInclude(p => p.WorkClass)
+            .Include(w => w.Process)
+            .Include(w => w.WorkPattern)
+            .Include(w => w.User)
+            .Include(w => w.WorkReportWorkers)
+                .ThenInclude(wr => wr.Worker)
+            .FirstOrDefaultAsync(w => w.Id == id);
+        
+        if (workReport == null)
+        {
+            return NotFound();
+        }
+
+        
+    }
+
+
     [HttpGet]
     public async Task<IActionResult> GetProcessOptions(int workClassId)
     {
