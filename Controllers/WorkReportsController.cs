@@ -229,6 +229,31 @@ public class WorkReportsController : Controller
             return NotFound();
         }
 
+        var vm = new WorkReportDetailsViewModel
+        {
+            Id = workReport.Id,
+            ReporterName = workReport.User.UserName ?? string.Empty,
+            WorkDate = workReport.WorkDate,
+            ProductionOrderNumber = workReport.ProductionOrder.OrderNumber,
+            ProductCode = workReport.ProductionOrder.Product.ProductCode,
+            ProductName = workReport.ProductionOrder.Product.Name,
+            OrderQty = workReport.ProductionOrder.OrderQty,
+            DueDate = workReport.ProductionOrder.DueDate,
+            WorkClassName = workReport.ProductionOrder.Product.WorkClass.Name,
+            ProcessName = workReport.Process.Name,
+            WorkPatternName = workReport.WorkPattern.Name,
+            Workers = workReport.WorkReportWorkers.Select(wr => new WorkReportWorkerDetailsViewModel
+            {
+                WorkerNumber = wr.Worker.WorkerNumber.ToString(),
+                WorkerName = wr.Worker.Name ?? string.Empty,
+                StartAt = wr.StartAt,
+                EndAt = wr.EndAt,
+                BreakMinutes = wr.BreakMinutes,
+                ProducedQty = wr.ProducedQty
+            }).ToList()
+        };
+
+        return View(vm);
         
     }
 
