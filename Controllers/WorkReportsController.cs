@@ -149,7 +149,7 @@ public class WorkReportsController : Controller
 
         if(!ModelState.IsValid)
         {
-            await RepopulateProcessWorkPatternOptionsAsync(vm);
+            (vm.ProcessOptions, vm.WorkPatternOptions) = await RepopulateProcessWorkPatternOptionsAsync(vm.WorkClassId, vm.ProcessId);
             await RepopulateWorkerNamesAsync(vm);
             return View(vm);
         }
@@ -186,30 +186,7 @@ public class WorkReportsController : Controller
         
     }
 
-    [HttpGet]
-    public async Task<IActionResult> FindProductionOrderByNumber(string orderNumber)
-    {
-        var result = await _context.ProductionOrders
-            .Where(po => po.OrderNumber == orderNumber)
-            .Select(po => new
-            {
-                ProductionOrderId = po.Id,
-                ProductCode = po.Product.ProductCode,
-                ProductName = po.Product.Name,
-                OrderQty = po.OrderQty,
-                DueDate = po.DueDate,
-                WorkClassId = po.Product.WorkClassId,
-                WorkClassName = po.Product.WorkClass.Name
-            })
-            .FirstOrDefaultAsync();
 
-        if(result == null)
-        {
-            return NotFound();
-        }
-
-        return Json(result);
-    }
 
     public async Task<IActionResult> Details(int id)
     {
@@ -254,7 +231,85 @@ public class WorkReportsController : Controller
         };
 
         return View(vm);
+
+    }
+
+    public async Task<IActionResult> Edit(int id)
+    {
+        var workReport = await _context.WorkReports
+            .Include(w => w.ProductionOrder)
+                .ThenInclude(po => po.Product)
+                    .ThenInclude(p => p.WorkClass)
+            .Include(w => w.WorkReportWorkers)
+                .ThenInclude(wr => wr.Worker)
+            .Include(w => w.User)
+            .FirstOrDefaultAsync(w => w.Id == id);
         
+        if (workReport == null)
+        {
+            return NotFound();
+        }
+
+        if (!CanEditWorkReport(workReport))
+        {
+            return Forbid();
+        }
+
+        var vm = new WorkReportEditViewModel
+        {
+            Id = workReport.Id,
+            ReporterName = workReport.User.UserName ?? string.Empty,
+            WorkDate = workReport.WorkDate,
+            ProductionOrderNumber = workReport.ProductionOrder.OrderNumber,
+            ProductCode = workReport.ProductionOrder.Product.ProductCode,
+            ProductName = workReport.ProductionOrder.Product.Name,
+            OrderQty = workReport.ProductionOrder.OrderQty,
+            DueDate = workReport.ProductionOrder.DueDate,
+            WorkClassName = workReport.ProductionOrder.Product.WorkClass.Name,
+            WorkClassId = workReport.ProductionOrder.Product.WorkClassId,
+            ProcessId = workReport.ProcessId,
+            WorkPatternId = workReport.WorkPatternId,
+            WorkReportWorkers = workReport.WorkReportWorkers.Select(wr => new WorkReportWorkerInputViewModel
+            {
+                WorkerNumber = wr.Worker.WorkerNumber,
+                WorkerId = wr.WorkerId,
+                WorkerName = wr.Worker.Name ?? string.Empty,
+                StartAt = TimeOnly.FromDateTime(wr.StartAt),
+                EndAt = TimeOnly.FromDateTime(wr.EndAt),
+                BreakMinutes = wr.BreakMinutes,
+                ProducedQty = wr.ProducedQty
+            }).ToList()
+        };
+
+        (vm.ProcessOptions, vm.WorkPatternOptions) = await RepopulateProcessWorkPatternOptionsAsync(vm.WorkClassId, vm.ProcessId);
+
+        return View(vm);
+    }
+
+
+    [HttpGet]
+    public async Task<IActionResult> FindProductionOrderByNumber(string orderNumber)
+    {
+        var result = await _context.ProductionOrders
+            .Where(po => po.OrderNumber == orderNumber)
+            .Select(po => new
+            {
+                ProductionOrderId = po.Id,
+                ProductCode = po.Product.ProductCode,
+                ProductName = po.Product.Name,
+                OrderQty = po.OrderQty,
+                DueDate = po.DueDate,
+                WorkClassId = po.Product.WorkClassId,
+                WorkClassName = po.Product.WorkClass.Name
+            })
+            .FirstOrDefaultAsync();
+
+        if(result == null)
+        {
+            return NotFound();
+        }
+
+        return Json(result);
     }
 
 
@@ -342,15 +397,15 @@ public class WorkReportsController : Controller
         vm.WorkClassName = order.WorkClassName;
     }
 
-    private async Task RepopulateProcessWorkPatternOptionsAsync(WorkReportCreateViewModel vm)
+    private async Task<(List<SelectListItem> ProcessOptions, List<SelectListItem> WorkPatternOptions)> RepopulateProcessWorkPatternOptionsAsync(int? workClassId, int? processId)
     {
-        if(vm.WorkClassId is null)
+        if(workClassId is null)
         {
-            return;
+            return (new List<SelectListItem>(), new List<SelectListItem>());
         }
 
-        vm.ProcessOptions = await _context.StandardWorkTimes
-            .Where(s => s.WorkClassId == vm.WorkClassId)
+        var processOptions = await _context.StandardWorkTimes
+            .Where(s => s.WorkClassId == workClassId)
             .Select(s => new SelectListItem
             {
                 Value = s.ProcessId.ToString(),
@@ -359,13 +414,13 @@ public class WorkReportsController : Controller
             .Distinct()
             .ToListAsync();
 
-        if(vm.ProcessId is null)
+        if(processId is null)
         {
-            return;
+            return(processOptions, new List<SelectListItem>());
         }
 
-        vm.WorkPatternOptions = await _context.StandardWorkTimes
-            .Where(s => s.WorkClassId == vm.WorkClassId && s.ProcessId == vm.ProcessId)
+        var workPatternOptions = await _context.StandardWorkTimes
+            .Where(s => s.WorkClassId == workClassId && s.ProcessId == processId)
             .Select(s => new SelectListItem
             {
                 Value = s.WorkPatternId.ToString(),
@@ -373,6 +428,8 @@ public class WorkReportsController : Controller
             })
             .Distinct()
             .ToListAsync();
+
+        return (processOptions, workPatternOptions);
     }
 
     private async Task RepopulateWorkerNamesAsync(WorkReportCreateViewModel vm)
@@ -409,6 +466,14 @@ public class WorkReportsController : Controller
 
         return descending ? query.OrderByDescending(keySelector) : query.OrderBy(keySelector);
     }
+
+    private bool CanEditWorkReport(WorkReport workReport)
+    {
+        var currentUserId = _userManager.GetUserId(User);
+        return User.IsInRole("Admin") || workReport.UserId == currentUserId;
+    }
+
+
 
 
 
