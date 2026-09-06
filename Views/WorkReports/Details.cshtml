@@ -1,1 +1,113 @@
 @model DailyWorkReport.ViewModels.WorkReport.WorkReportDetailsViewModel
+
+@{
+    ViewData["Title"] = "Work Report Details";
+}
+
+<h1 class="h3 mb-4">
+    <i class="bi bi-file-earmark-text text-primary me-2"></i>Work Report Details
+</h1>
+
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+        <h2 class="h6 text-uppercase text-muted mb-3">Basic Info</h2>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label small text-muted mb-0">Reporter</label>
+                <p class="mb-0">@Model.ReporterName</p>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label small text-muted mb-0">Work Date</label>
+                <p class="mb-0">@Model.WorkDate.ToString("yyyy-MM-dd")</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+        <h2 class="h6 text-uppercase text-muted mb-3">
+            <i class="bi bi-clipboard-check me-1"></i>Production Order
+        </h2>
+        <div class="row row-cols-md-5 g-3">
+            <div class="col">
+                <label class="form-label small text-muted mb-0">Order No.</label>
+                <p class="mb-0">@Model.ProductionOrderNumber</p>
+            </div>
+            <div class="col">
+                <label class="form-label small text-muted mb-0">Product Code</label>
+                <p class="mb-0">@Model.ProductCode</p>
+            </div>
+            <div class="col">
+                <label class="form-label small text-muted mb-0">Product Name</label>
+                <p class="mb-0">@Model.ProductName</p>
+            </div>
+            <div class="col">
+                <label class="form-label small text-muted mb-0">Order Qty</label>
+                <p class="mb-0">@Model.OrderQty</p>
+            </div>
+            <div class="col">
+                <label class="form-label small text-muted mb-0">Due Date</label>
+                <p class="mb-0">@Model.DueDate.ToString("yyyy-MM-dd")</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+        <h2 class="h6 text-uppercase text-muted mb-3">
+            <i class="bi bi-gear me-1"></i>Work Details
+        </h2>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label small text-muted mb-0">Work Class</label>
+                <p class="mb-0">@Model.WorkClassName</p>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label small text-muted mb-0">Process</label>
+                <p class="mb-0">@Model.ProcessName</p>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label small text-muted mb-0">Work Pattern</label>
+                <p class="mb-0">@Model.WorkPatternName</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+        <h2 class="h6 text-uppercase text-muted mb-3">
+            <i class="bi bi-people me-1"></i>Workers
+        </h2>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr class="text-muted small text-uppercase">
+                        <th>Worker No.</th>
+                        <th>Worker Name</th>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th>Break</th>
+                        <th>Produced Qty</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var worker in Model.Workers){
+                        <tr>
+                            <td>@worker.WorkerNumber</td>
+                            <td>@worker.WorkerName</td>
+                            <td>@worker.StartAt.ToString("yyyy-MM-dd HH:mm")</td>
+                            <td>@worker.EndAt.ToString("yyyy-MM-dd HH:mm")</td>
+                            <td>@(worker.BreakMinutes) min</td>
+                            <td>@worker.ProducedQty</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<a asp-action="Index" class="btn btn-outline-secondary px-4">Back to List</a>
