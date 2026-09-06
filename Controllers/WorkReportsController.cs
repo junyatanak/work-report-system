@@ -7,6 +7,7 @@ using DailyWorkReport.ViewModels.WorkReport;
 using DailyWorkReport.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Linq.Expressions;
+using DailyWorkReport.Constants;
 
 
 namespace DailyWorkReport.Controllers;
@@ -399,7 +400,7 @@ public class WorkReportsController : Controller
 
     private async Task<(List<SelectListItem> ProcessOptions, List<SelectListItem> WorkPatternOptions)> RepopulateProcessWorkPatternOptionsAsync(int? workClassId, int? processId)
     {
-        if(workClassId is null)
+        if (workClassId is null)
         {
             return (new List<SelectListItem>(), new List<SelectListItem>());
         }
@@ -416,7 +417,7 @@ public class WorkReportsController : Controller
 
         if(processId is null)
         {
-            return(processOptions, new List<SelectListItem>());
+            return (processOptions, new List<SelectListItem>());
         }
 
         var workPatternOptions = await _context.StandardWorkTimes
@@ -470,7 +471,7 @@ public class WorkReportsController : Controller
     private bool CanEditWorkReport(WorkReport workReport)
     {
         var currentUserId = _userManager.GetUserId(User);
-        return User.IsInRole("Admin") || workReport.UserId == currentUserId;
+        return User.IsInRole(Roles.Admin) || workReport.UserId == currentUserId;
     }
 
 
