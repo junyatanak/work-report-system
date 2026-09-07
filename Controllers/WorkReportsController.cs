@@ -407,12 +407,14 @@ public class WorkReportsController : Controller
 
         var processOptions = await _context.StandardWorkTimes
             .Where(s => s.WorkClassId == workClassId)
-            .Select(s => new SelectListItem
-            {
-                Value = s.ProcessId.ToString(),
-                Text = s.Process.Name
-            })
+            .Select(s => new {s.ProcessId, s.Process.Name})
             .Distinct()
+            .OrderBy(p => p.Name)
+            .Select(p => new SelectListItem
+            {
+                Value = p.ProcessId.ToString(),
+                Text = p.Name
+            })
             .ToListAsync();
 
         if(processId is null)
@@ -422,12 +424,14 @@ public class WorkReportsController : Controller
 
         var workPatternOptions = await _context.StandardWorkTimes
             .Where(s => s.WorkClassId == workClassId && s.ProcessId == processId)
-            .Select(s => new SelectListItem
-            {
-                Value = s.WorkPatternId.ToString(),
-                Text = s.WorkPattern.Name
-            })
+            .Select(s => new { s.WorkPatternId, s.WorkPattern.Name})
             .Distinct()
+            .OrderBy(w => w.Name)
+            .Select(w => new SelectListItem
+            {
+                Value = w.WorkPatternId.ToString(),
+                Text = w.Name
+            })
             .ToListAsync();
 
         return (processOptions, workPatternOptions);
