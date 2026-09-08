@@ -1,0 +1,73 @@
+@model DailyWorkReport.ViewModels.WorkReport.WorkReportEditViewModel
+
+@{
+    ViewData["Title"] = "Edit Work Report";
+}
+
+<h1 class="h3 mb-4">
+    <i class="bi bi-pencil-square text-primary me-2"></i>Edit Work Report
+</h1>
+
+<form asp-action="Edit" method="post">
+    <input asp-for="Id" type="hidden" />
+    <input asp-for="ReporterName" type="hidden" />
+    <input asp-for="ProductionOrderNumber" type="hidden" />
+    <input asp-for="ProductCode" type="hidden" />
+    <input asp-for="ProductName" type="hidden" />
+    <input asp-for="OrderQty" type="hidden" />
+    <input asp-for="DueDate" type="hidden" />
+    <input asp-for="WorkClassName" type="hidden" />
+    <input asp-for="WorkClassId" type="hidden" />
+
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <h2 class="h6 text-uppercase text-muted mb-3">Basic Info</h2>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Reporter</label>
+                    <input asp-for="ReporterName" class="form-control" disabled />
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="WorkDate" class="form-label"></label>
+                    <input asp-for="WorkDate" type="date" class="form-control" />
+                    <span asp-validation-for="WorkDate" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <h2 class="h6 text-uppercase text-muted mb-3">
+                <i class="bi bi-clipboard-check me-1"></i>Production Order
+            </h2>
+            <div class="row row-cols-md-5 g-3">
+                <div class="col">
+                    <label class="form-label small text-muted mb-0">Order No.</label>
+                    <p class="mb-0">@Model.ProductionOrderNumber</p>
+                </div>
+                <div class="col">
+                    <label class="form-label small text-muted mb-0">Product Code</label>
+                    <p class="mb-0">@Model.ProductCode</p>
+                </div>
+                <div class="col">
+                    <label class="form-label small text-muted mb-0">Product Name</label>
+                    <p class="mb-0">@Model.ProductName</p>
+                </div>
+                <div class="col">
+                    <label class="form-label small text-muted mb-0">Order Qty</label>
+                    <p class="mb-0">@Model.OrderQty</p>
+                </div>
+                <div class="col">
+                    <label class="form-label small text-muted mb-0">Due Date</label>
+                    <p class="mb-0">@Model.DueDate.ToString("yyyy-MM-dd")</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</form>
