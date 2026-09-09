@@ -68,6 +68,32 @@
         </div>
     </div>
 
-
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <h2 class="h6 text-uppercase text-muted mb-3">
+                <i class="bi bi-gear me-1"></i>Work Details
+            </h2>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label small text-muted" for="workClassName">Work Class</label>
+                    <input asp-for="WorkClassName" id="workClassName" class="form-control form-control-sm bg-light" disabled />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="processId">Process</label>
+                    <select asp-for="ProcessId" id="processId" asp-items="Model.ProcessOptions" class="form-select">
+                        <option value="">-- Select --</option>
+                    </select>
+                    <span asp-validation-for="ProcessId" class="text-danger"></span>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="workPatternId">Work Pattern</label>
+                    <select asp-for="WorkPatternId" id="workPatternId" asp-items="Model.WorkPatternOptions" class="form-select">
+                        <option value="">-- Select --</option>
+                    </select>
+                    <span asp-validation-for="WorkPatternId" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </form>
