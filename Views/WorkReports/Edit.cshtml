@@ -76,7 +76,7 @@
             <div class="row g-3">
                 <div class="col-md-4">
                     <label class="form-label small text-muted" for="workClassName">Work Class</label>
-                    <input asp-for="WorkClassName" id="workClassName" class="form-control form-control-sm bg-light" disabled />
+                    <input asp-for="WorkClassName" class="form-control form-control-sm bg-light" disabled />
                 </div>
                 <div class="col-md-4">
                     <label class="form-label" for="processId">Process</label>
@@ -95,5 +95,96 @@
             </div>
         </div>
     </div>
+
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="h6 text-uppercase text-muted mb-0">
+                    <i class="bi bi-people me-1"></i>Workers
+                </h2>
+                <button type="button" id="addWorkerBtn" class="btn btn-primary btn-sm">
+                    <i class="bi bi-plus-lg me-1"></i>Add Worker
+                </button>
+            </div>
+
+            @{
+                var workerErrorKeys = ViewData.ModelState.Keys
+                    .Where(k => k.StartsWith("WorkReportWorkers"))
+                    .ToList();
+            }
+            @if (workerErrorKeys.Any())
+            {
+                <div class="alert alert-danger py-2">
+                    <ul class="mb-0 ps-3">
+                        @foreach (var key in workerErrorKeys)
+                        {
+                            foreach (var error in ViewData.ModelState[key]!.Errors)
+                            {
+                                <li>@error.ErrorMessage</li>
+                            }
+                        }
+                    </ul>
+                </div>
+            }
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" id="workersTable">
+                    <thead>
+                        <tr class="text-muted small text-uppercase">
+                            <th style="width: 12%;">Worker No.</th>
+                            <th style="width: 18%;">Worker Name</th>
+                            <th style="width: 13%;">Start</th>
+                            <th style="width: 13%;">End</th>
+                            <th style="width: 14%;">Break</th>
+                            <th style="width: 15%;">Produced Qty</th>
+                            <th style="width: 5%;"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="workersTableBody">
+                        @for (int i = 0; i < Model.WorkReportWorkers.Count; i++)
+                        {
+                            var worker = Model.WorkReportWorkers[i];
+                            <tr>
+                                <td>
+                                    <input type="number" name="WorkReportWorkers[@i].WorkerNumber" value="@worker.WorkerNumber" class="form-control form-control-sm worker-number" autocomplete="off" />
+                                    <span class="text-danger small worker-number-error"></span>
+                                </td>
+                                <td>
+                                    <input type="text" value="@worker.WorkerName" class="form-control form-control-sm bg-light worker-name" disabled />
+                                    <input type="hidden" name="WorkReportWorkers[@i].WorkerId" value="@worker.WorkerId" class="worker-id" />
+                                </td>
+                                <td>
+                                    <input type="time" name="WorkReportWorkers[@i].StartAt" value="@worker.StartAt.ToString("HH:mm")" class="form-control form-control-sm" />
+                                </td>
+                                <td>
+                                    <input type="time" name="WorkReportWorkers[@i].EndAt" value="@worker.EndAt.ToString("HH:mm")" class="form-control form-control-sm" />
+                                </td>
+                                <td>
+                                    <select name="WorkReportWorkers[@i].BreakMinutes" class="form-select form-select-sm">
+                                        <option value="0" selected="@(worker.BreakMinutes == 0)">0 min</option>
+                                        <option value="30" selected="@(worker.BreakMinutes == 30)">30 min</option>
+                                        <option value="40" selected="@(worker.BreakMinutes == 40)">40 min</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="number" name="WorkReportWorkers[@i].ProducedQty" value="@worker.ProducedQty" class="form-control form-control-sm" />
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-outline-danger btn-sm remove-worker-btn">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <p id="noWorkersMessage" class="text-muted text-center small py-3 mb-0">
+                No workers added yet. Click "Add Worker" to get started.
+            </p>
+        </div>
+    </div>
+
+
 
 </form>
