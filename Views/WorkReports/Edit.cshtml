@@ -75,7 +75,7 @@
             </h2>
             <div class="row g-3">
                 <div class="col-md-4">
-                    <label class="form-label small text-muted" for="workClassName">Work Class</label>
+                    <label class="form-label small text-muted">Work Class</label>
                     <input asp-for="WorkClassName" class="form-control form-control-sm bg-light" disabled />
                 </div>
                 <div class="col-md-4">
@@ -185,6 +185,140 @@
         </div>
     </div>
 
-
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary px-4">
+            <i class="bi bi-check-lg me-1"></i>Save
+        </button>
+        <a asp-action="Index" class="btn btn-outline-secondary px-4">Cancel</a>
+    </div>
 
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        let workerIndex = @Model.WorkReportWorkers.Count;
+
+        function createWorkerRow() {
+            const index = workerIndex++;
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>
+                    <input type="number" name="WorkReportWorkers[${index}].WorkerNumber" class="form-control form-control-sm worker-number" autocomplete="off" />
+                    <span class="text-danger small worker-number-error"></span>
+                </td>
+                <td>
+                    <input type="text" class="form-control form-control-sm bg-light worker-name" disabled />
+                    <input type="hidden" name="WorkReportWorkers[${index}].WorkerId" class="worker-id" />
+                </td>
+                <td>
+                    <input type="time" name="WorkReportWorkers[${index}].StartAt" class="form-control form-control-sm" />
+                </td>
+                <td>
+                    <input type="time" name="WorkReportWorkers[${index}].EndAt" class="form-control form-control-sm" />
+                </td>
+                <td>
+                    <select name="WorkReportWorkers[${index}].BreakMinutes" class="form-select form-select-sm">
+                        <option value="0">0 min</option>
+                        <option value="30">30 min</option>
+                        <option value="40">40 min</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="number" name="WorkReportWorkers[${index}].ProducedQty" class="form-control form-control-sm" />
+                </td>
+                <td>
+                    <button type="button" class="btn btn-outline-danger btn-sm remove-worker-btn">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </td>
+            `;
+            return tr;
+        }
+
+        function updateNoWorkersMessage() {
+            const tbody = document.getElementById('workersTableBody');
+            const message = document.getElementById('noWorkersMessage');
+            message.style.display = tbody.children.length === 0 ? 'block' : 'none';
+        }
+
+        document.getElementById('addWorkerBtn').addEventListener('click', function () {
+            const tbody = document.getElementById('workersTableBody');
+            tbody.appendChild(createWorkerRow());
+            updateNoWorkersMessage();
+        });
+
+        document.getElementById('workersTableBody').addEventListener('click', function (event) {
+            const button = event.target.closest('.remove-worker-btn');
+            if (button) {
+                button.closest('tr').remove();
+                updateNoWorkersMessage();
+            }
+        });
+
+        document.getElementById('processId').addEventListener('change', async function () {
+            const processId = this.value;
+            const workClassId = document.getElementById('workClassId').value;
+            const workPatternSelectEl = document.getElementById('workPatternId');
+
+            workPatternSelectEl.innerHTML = '<option value="">-- Select process first --</option>';
+
+            if (!processId || !workClassId) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/WorkReports/GetWorkPatternOptions?workClassId=${workClassId}&processId=${processId}`);
+                const workPatterns = await response.json();
+
+                workPatternSelectEl.innerHTML = '<option value="">-- Select --</option>';
+                workPatterns.forEach(w => {
+                    const option = document.createElement('option');
+                    option.value = w.workPatternId;
+                    option.textContent = w.name;
+                    workPatternSelectEl.appendChild(option);
+                });
+            } catch {
+                workPatternSelectEl.innerHTML = '<option value="">-- Failed to load --</option>';
+            }
+        });
+
+        document.getElementById('workersTableBody').addEventListener('blur', async function (event) {
+            if (!event.target.classList.contains('worker-number')) {
+                return;
+            }
+
+            const input = event.target;
+            const workerNumber = input.value.trim();
+            const row = input.closest('tr');
+            const errorEl = row.querySelector('.worker-number-error');
+            const nameEl = row.querySelector('.worker-name');
+            const idEl = row.querySelector('.worker-id');
+
+            errorEl.textContent = '';
+            nameEl.value = '';
+            idEl.value = '';
+
+            if (!workerNumber) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/WorkReports/FindWorkerByNumber?workerNumber=${encodeURIComponent(workerNumber)}`);
+
+                if (response.ok) {
+                    const worker = await response.json();
+                    nameEl.value = worker.name ?? '';
+                    idEl.value = worker.id;
+                } else {
+                    errorEl.textContent = 'Worker not found.';
+                }
+            } catch {
+                errorEl.textContent = 'Failed to check worker number. Please try again.';
+            }
+        }, true);
+
+        updateNoWorkersMessage();
+
+    </script>
+}
