@@ -8,6 +8,7 @@ using DailyWorkReport.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Linq.Expressions;
 using DailyWorkReport.Constants;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 
 namespace DailyWorkReport.Controllers;
@@ -285,6 +286,71 @@ public class WorkReportsController : Controller
         (vm.ProcessOptions, vm.WorkPatternOptions) = await RepopulateProcessWorkPatternOptionsAsync(vm.WorkClassId, vm.ProcessId);
 
         return View(vm);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, WorkReportEditViewModel vm)
+    {
+        if (id != vm.Id)
+        {
+            return BadRequest();
+        }
+        var workReport = await _context.WorkReports
+            .Include(w => w.WorkReportWorkers)
+            .FirstOrDefaultAsync(w => w.Id == id);
+
+        if (workReport == null)
+        {
+            return NotFound();
+        }
+
+        if (!CanEditWorkReport(workReport))
+        {
+            return Forbid();
+        }
+
+        if (!vm.WorkReportWorkers.Any())
+        {
+            ModelState.AddModelError(string.Empty, "At least one worker is required.");
+        }
+
+        for (int i = 0; i < vm.WorkReportWorkers.Count; i++)
+        {
+            var worker = vm.WorkReportWorkers[i];
+
+            if (worker.WorkerNumber is null)
+            {
+                ModelState.AddModelError($"WorkReportWorkers[{i}].WorkerNumber", $"Row {i + 1}: Worker number is required.");
+                continue;
+            }
+
+            if (worker.WorkerId is null)
+            {
+                ModelState.AddModelError($"WorkReportWorkers[{i}].WorkerNumber", $"Row {i + 1}: Please enter a valid worker number.");
+                continue;
+            }
+
+            if (worker.ProducedQty is null)
+            {
+                ModelState.AddModelError($"WorkReportWorkers[{i}].ProducedQty", $"Row {i + 1}: Produced quantity is required.");
+                continue;
+            }
+
+            if (worker.StartAt == worker.EndAt)
+            {
+                ModelState.AddModelError($"WorkReportWorkers[{i}].EndAt", $"Row {i + 1}: Start time and end time cannot be the same.");
+                continue;
+            }
+
+            var (startAt, endAt) = ResolveShiftDateTime(vm.WorkDate, worker.StartAt, worker.EndAt);
+            if ((endAt - startAt).TotalHours > 12)
+            {
+                ModelState.AddModelError($"WorkReportWorkers[{i}].EndAt", $"Row {i + 1}: Shift duration cannot exceed 12 hours. Please check the start and end times.");
+            }
+
+        }
+        
     }
 
 
