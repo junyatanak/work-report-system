@@ -152,7 +152,7 @@ public class WorkReportsController : Controller
         if(!ModelState.IsValid)
         {
             (vm.ProcessOptions, vm.WorkPatternOptions) = await RepopulateProcessWorkPatternOptionsAsync(vm.WorkClassId, vm.ProcessId);
-            await RepopulateWorkerNamesAsync(vm);
+            await RepopulateWorkerNamesAsync(vm.WorkReportWorkers);
             return View(vm);
         }
 
@@ -350,6 +350,43 @@ public class WorkReportsController : Controller
             }
 
         }
+
+        var totalProducedQty = vm.WorkReportWorkers.Sum(w => w.ProducedQty ?? 0);
+        if (totalProducedQty > vm.OrderQty)
+        {
+            ModelState.AddModelError(string.Empty, "Total produced quantity exceeds the order quantity.");
+        }
+
+        if (!ModelState.IsValid)
+        {
+            (vm.ProcessOptions, vm.WorkPatternOptions) = await RepopulateProcessWorkPatternOptionsAsync(vm.WorkClassId, vm.ProcessId);
+            await RepopulateWorkerNamesAsync(vm.WorkReportWorkers);
+            return View(vm);
+        }
+
+        workReport.WorkDate = vm.WorkDate;
+        workReport.ProcessId = vm.ProcessId!.Value;
+        workReport.WorkPatternId = vm.WorkPatternId!.Value;
+
+        _context.WorkReportWorkers.RemoveRange(workReport.WorkReportWorkers);
+
+        foreach (var workerInput in vm.WorkReportWorkers)
+        {
+            var (startAt, endAt) = ResolveShiftDateTime(vm.WorkDate, workerInput.StartAt, workerInput.EndAt);
+
+            workReport.WorkReportWorkers.Add(new WorkReportWorker
+            {
+                WorkerId = workerInput.WorkerId!.Value,
+                StartAt = startAt,
+                EndAt = endAt,
+                BreakMinutes = workerInput.BreakMinutes,
+                ProducedQty = workerInput.ProducedQty!.Value
+            });
+        }
+
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Index));
         
     }
 
@@ -503,9 +540,9 @@ public class WorkReportsController : Controller
         return (processOptions, workPatternOptions);
     }
 
-    private async Task RepopulateWorkerNamesAsync(WorkReportCreateViewModel vm)
+    private async Task RepopulateWorkerNamesAsync(List<WorkReportWorkerInputViewModel> workers)
     {
-        var workerIds = vm.WorkReportWorkers
+        var workerIds = workers
             .Where(w => w.WorkerId is not null)
             .Select(w => w.WorkerId!.Value)
             .ToList();
@@ -514,7 +551,7 @@ public class WorkReportsController : Controller
             .Where(w => workerIds.Contains(w.Id))
             .ToDictionaryAsync(w => w.Id, w => w.Name ?? string.Empty);
 
-        foreach(var workerInput in vm.WorkReportWorkers)
+        foreach(var workerInput in workers)
         {
             if(workerInput.WorkerId is not null && workerNames.TryGetValue(workerInput.WorkerId.Value, out var name))
             {
