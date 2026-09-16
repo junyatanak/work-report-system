@@ -390,6 +390,81 @@ public class WorkReportsController : Controller
         
     }
 
+    public async Task<IActionResult> Delete(int id)
+    {
+        var workReport = await _context.WorkReports
+            .Include(w => w.ProductionOrder)
+                .ThenInclude(po => po.Product)
+                    .ThenInclude(p => p.WorkClass)
+            .Include(w => w.Process)
+            .Include(w => w.WorkPattern)
+            .Include(w => w.User)
+            .Include(w => w.WorkReportWorkers)
+                .ThenInclude(wr => wr.Worker)
+            .FirstOrDefaultAsync(w => w.Id == id);
+
+        if (workReport == null)
+        {
+            return NotFound();
+        }
+
+        if (!CanEditWorkReport(workReport))
+        {
+            return Forbid();
+        }
+
+        var vm = new WorkReportDetailsViewModel
+        {
+            Id = workReport.Id,
+            ReporterName = workReport.User.UserName ?? string.Empty,
+            WorkDate = workReport.WorkDate,
+            ProductionOrderNumber = workReport.ProductionOrder.OrderNumber,
+            ProductCode = workReport.ProductionOrder.Product.ProductCode,
+            ProductName = workReport.ProductionOrder.Product.Name,
+            OrderQty = workReport.ProductionOrder.OrderQty,
+            DueDate = workReport.ProductionOrder.DueDate,
+            WorkClassName = workReport.ProductionOrder.Product.WorkClass.Name,
+            ProcessName = workReport.Process.Name,
+            WorkPatternName = workReport.WorkPattern.Name,
+            Workers = workReport.WorkReportWorkers.Select(wr => new WorkReportWorkerDetailsViewModel
+            {
+                WorkerNumber = wr.Worker.WorkerNumber.ToString(),
+                WorkerName = wr.Worker.Name ?? string.Empty,
+                StartAt = wr.StartAt,
+                EndAt = wr.EndAt,
+                BreakMinutes = wr.BreakMinutes,
+                ProducedQty = wr.ProducedQty
+            }).ToList()
+        };
+
+        return View(vm);
+    }
+
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        var workReport = await _context.WorkReports
+            .Include(w => w.WorkReportWorkers)
+            .FirstOrDefaultAsync(w => w.Id == id);
+
+        if (workReport == null)
+        {
+            return NotFound();
+        }
+
+        if (!CanEditWorkReport(workReport))
+        {
+            return Forbid();
+        }
+
+        _context.WorkReportWorkers.RemoveRange(workReport.WorkReportWorkers);
+        _context.WorkReports.Remove(workReport);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Index));
+    }
+
 
     [HttpGet]
     public async Task<IActionResult> FindProductionOrderByNumber(string orderNumber)
