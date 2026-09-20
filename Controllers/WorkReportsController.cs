@@ -10,6 +10,7 @@ using System.Linq.Expressions;
 using DailyWorkReport.Constants;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using ClosedXML.Excel;
+using Microsoft.VisualBasic;
 
 
 namespace DailyWorkReport.Controllers;
@@ -504,10 +505,82 @@ public class WorkReportsController : Controller
     [HttpGet]
     public async Task<IActionResult> Export(WorkReportIndexFilterViewModel filter)
     {
-        var rows = await ApplyFilter(_context.WorkReports.AsNoTracking(), filter)
-            .SelectMany
+        var rows = await ApplyFilter(_context.WorkReports, filter)
+            .SelectMany(r => r.WorkReportWorkers.Select(w => new
+            {
+                r.WorkDate,
+                Reporter = r.User.UserName ?? string.Empty,
+                OrderNumber = r.ProductionOrder.OrderNumber,
+                ProductCode = r.ProductionOrder.Product.ProductCode,
+                ProductName = r.ProductionOrder.Product.Name,
+                OrderQty = r.ProductionOrder.OrderQty,
+                DueDate = r.ProductionOrder.DueDate,
+                WorkClassName = r.ProductionOrder.Product.WorkClass.Name,
+                ProcessName = r.Process.Name,
+                WorkPatternName = r.WorkPattern.Name,
+                WorkerNumber = w.Worker.WorkerNumber,
+                w.StartAt,
+                w.EndAt,
+                w.BreakMinutes,
+                w.ProducedQty
+            }))
+            .OrderBy(x => x.WorkDate)
+            .ThenBy(x => x.OrderNumber)
+            .ThenBy(x => x.WorkClassName)
+            .ThenBy(x => x.ProcessName)
+            .ThenBy(x => x.WorkPatternName)
+            .ThenBy(x => x.WorkerNumber)
+            .ToListAsync();
 
-        
+        using var workbook = new XLWorkbook();
+        var ws = workbook.Worksheets.Add("WorkReports");
+
+        var headers = new[]
+        {
+            "Work Date", "Reporter", "Order No.", "Product Code", "Product Name", "Order Qty", "Due Date",
+            "Work Class", "Process", "Work Pattern", "Worker No.", "Work Hours", "Produced Qty"
+        };
+
+        for (var i = 0; i < headers.Length; i++)
+        {
+            ws.Cell(1, i + 1).Value = headers[i];
+        }
+
+        var rowIndex = 2;
+        foreach (var row in rows)
+        {
+            var workHours = Math.Round(((row.EndAt - row.StartAt).TotalMinutes - row.BreakMinutes) / 60.0, 2);
+
+            ws.Cell(rowIndex, 1).Value = row.WorkDate.ToDateTime(TimeOnly.MinValue);
+            ws.Cell(rowIndex, 2).Value = row.Reporter;
+            ws.Cell(rowIndex, 3).Value = row.OrderNumber;
+            ws.Cell(rowIndex, 4).Value = row.ProductCode;
+            ws.Cell(rowIndex, 5).Value = row.ProductName;
+            ws.Cell(rowIndex, 6).Value = row.OrderQty;
+            ws.Cell(rowIndex, 7).Value = row.DueDate.ToDateTime(TimeOnly.MinValue);
+            ws.Cell(rowIndex, 8).Value = row.WorkClassName;
+            ws.Cell(rowIndex, 9).Value = row.ProcessName;
+            ws.Cell(rowIndex, 10).Value = row.WorkPatternName;
+            ws.Cell(rowIndex, 11).Value = row.WorkerNumber;
+            ws.Cell(rowIndex, 12).Value = workHours;
+            ws.Cell(rowIndex, 13).Value = row.ProducedQty;
+
+            rowIndex++;
+        }
+
+        ws.Column(1).Style.DateFormat.Format = "yyyy-mm-dd";
+        ws.Column(7).Style.DateFormat.Format = "yyyy-mm-dd";
+        ws.Column(12).Style.NumberFormat.Format = "0.00";
+        ws.Row(1).Style.Font.Bold = true;
+        ws.SheetView.FreezeRows(1);
+        ws.Columns().AdjustToContents();
+
+        using var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+
+        var fileName = $"WorkReports_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+        return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+
     }
 
     private static (DateTime StartAt, DateTime EndAt) ResolveShiftDateTime(DateOnly workDate, TimeOnly startTime, TimeOnly endTime)
