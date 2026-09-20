@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Linq.Expressions;
 using DailyWorkReport.Constants;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using ClosedXML.Excel;
 
 
 namespace DailyWorkReport.Controllers;
@@ -25,39 +26,7 @@ public class WorkReportsController : Controller
 
     public async Task<IActionResult> Index(WorkReportIndexFilterViewModel filter)
     {
-        var query = _context.WorkReports
-            .Include(w => w.ProductionOrder)
-                .ThenInclude(po => po.Product)
-            .Include(w => w.Process)
-            .Include(w => w.User)
-            .Include(w => w.WorkReportWorkers)
-            .AsQueryable();
-        
-        if (filter.WorkDateFrom is not null)
-        {
-            query = query.Where(w => w.WorkDate >= filter.WorkDateFrom);
-        }
-        if (filter.WorkDateTo is not null)
-        {
-            query = query.Where(w => w.WorkDate <= filter.WorkDateTo);
-        }
-        if (!string.IsNullOrWhiteSpace(filter.ProductionOrderNumber))
-        {
-            query = query.Where(w => w.ProductionOrder.OrderNumber.Contains(filter.ProductionOrderNumber));
-        }
-        if (!string.IsNullOrWhiteSpace(filter.ProductName))
-        {
-            query = query.Where(w => w.ProductionOrder.Product.Name.Contains(filter.ProductName));
-        }
-        if (!string.IsNullOrWhiteSpace(filter.ProcessName))
-        {
-            query = query.Where(w => w.Process.Name.Contains(filter.ProcessName));
-        }
-        if (!string.IsNullOrWhiteSpace(filter.ReporterName))
-        {
-            query = query.Where(w => (w.User.UserName ?? string.Empty).Contains(filter.ReporterName));
-        }
-
+        var query = ApplyFilter(_context.WorkReports, filter);     
         query = ApplySort(query, filter.SortBy, filter.SortDescending);
 
         var currentUserId = _userManager.GetUserId(User);
@@ -532,6 +501,15 @@ public class WorkReportsController : Controller
         return Json(worker);
     }
 
+    [HttpGet]
+    public async Task<IActionResult> Export(WorkReportIndexFilterViewModel filter)
+    {
+        var rows = await ApplyFilter(_context.WorkReports.AsNoTracking(), filter)
+            .SelectMany
+
+        
+    }
+
     private static (DateTime StartAt, DateTime EndAt) ResolveShiftDateTime(DateOnly workDate, TimeOnly startTime, TimeOnly endTime)
     {
         var startAt = workDate.ToDateTime(startTime);
@@ -648,6 +626,35 @@ public class WorkReportsController : Controller
         };
 
         return descending ? query.OrderByDescending(keySelector) : query.OrderBy(keySelector);
+    }
+
+    private IQueryable<WorkReport> ApplyFilter(IQueryable<WorkReport> query, WorkReportIndexFilterViewModel filter)
+    {
+        if (filter.WorkDateFrom is not null)
+        {
+            query = query.Where(w => w.WorkDate >= filter.WorkDateFrom);
+        }
+        if (filter.WorkDateTo is not null)
+        {
+            query = query.Where(w => w.WorkDate <= filter.WorkDateTo);
+        }
+        if (!string.IsNullOrWhiteSpace(filter.ProductionOrderNumber))
+        {
+            query = query.Where(w => w.ProductionOrder.OrderNumber.Contains(filter.ProductionOrderNumber));
+        }
+        if (!string.IsNullOrWhiteSpace(filter.ProductName))
+        {
+            query = query.Where(w => w.ProductionOrder.Product.Name.Contains(filter.ProductName));
+        }
+        if (!string.IsNullOrWhiteSpace(filter.ProcessName))
+        {
+            query = query.Where(w => w.Process.Name.Contains(filter.ProcessName));
+        }
+        if (!string.IsNullOrWhiteSpace(filter.ReporterName))
+        {
+            query = query.Where(w => (w.User.UserName ?? string.Empty).Contains(filter.ReporterName));
+        }
+        return query;
     }
 
     private bool CanEditWorkReport(WorkReport workReport)
