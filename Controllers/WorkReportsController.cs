@@ -505,25 +505,28 @@ public class WorkReportsController : Controller
     [HttpGet]
     public async Task<IActionResult> Export(WorkReportIndexFilterViewModel filter)
     {
-        var rows = await ApplyFilter(_context.WorkReports, filter)
-            .SelectMany(r => r.WorkReportWorkers.Select(w => new
+        var reportIds = ApplyFilter(_context.WorkReports, filter).Select(r => r.Id);
+
+        var rows = await _context.WorkReportWorkers
+            .Where(w => reportIds.Contains(w.WorkReportId))
+            .Select(w => new
             {
-                r.WorkDate,
-                Reporter = r.User.UserName ?? string.Empty,
-                OrderNumber = r.ProductionOrder.OrderNumber,
-                ProductCode = r.ProductionOrder.Product.ProductCode,
-                ProductName = r.ProductionOrder.Product.Name,
-                OrderQty = r.ProductionOrder.OrderQty,
-                DueDate = r.ProductionOrder.DueDate,
-                WorkClassName = r.ProductionOrder.Product.WorkClass.Name,
-                ProcessName = r.Process.Name,
-                WorkPatternName = r.WorkPattern.Name,
+                WorkDate = w.WorkReport.WorkDate,
+                Reporter = w.WorkReport.User.UserName ?? string.Empty,
+                OrderNumber = w.WorkReport.ProductionOrder.OrderNumber,
+                ProductCode = w.WorkReport.ProductionOrder.Product.ProductCode,
+                ProductName = w.WorkReport.ProductionOrder.Product.Name,
+                OrderQty = w.WorkReport.ProductionOrder.OrderQty,
+                DueDate = w.WorkReport.ProductionOrder.DueDate,
+                WorkClassName = w.WorkReport.ProductionOrder.Product.WorkClass.Name,
+                ProcessName = w.WorkReport.Process.Name,
+                WorkPatternName = w.WorkReport.WorkPattern.Name,
                 WorkerNumber = w.Worker.WorkerNumber,
-                w.StartAt,
-                w.EndAt,
-                w.BreakMinutes,
-                w.ProducedQty
-            }))
+                StartAt = w.StartAt,
+                EndAt = w.EndAt,
+                BreakMinutes = w.BreakMinutes,
+                ProducedQty = w.ProducedQty
+            })
             .OrderBy(x => x.WorkDate)
             .ThenBy(x => x.OrderNumber)
             .ThenBy(x => x.WorkClassName)
