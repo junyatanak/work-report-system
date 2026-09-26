@@ -1,3 +1,5 @@
+using System.IO;
+using System.Text;
 using DailyWorkReport.Data;
 using DailyWorkReport.Models;
 using DailyWorkReport.ViewModels.ProductionOrder;
@@ -11,6 +13,13 @@ namespace DailyWorkReport.Controllers;
 public class ProductionOrdersController : Controller
 {
     private readonly ApplicationDbContext _context;
+    private const long MaxImportFileSize = 1 * 1024 * 1024;
+    private const int MaxImportRows = 1000;
+    private const int MaxErrorsToShow = 15;
+    private const int MaxDuplicatesToShow = 10; 
+    private static readonly string[] DueDateFormats = { "yyyy-M-d", "yyyy/M/d" };
+    private sealed record ParsedImportRow(int Line, string OrderNumber, string ProductCode, int OrderQty, DateOnly DueDate);
+
     public ProductionOrdersController(ApplicationDbContext context)
     {
         _context = context;
@@ -44,7 +53,9 @@ public class ProductionOrdersController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(ProductionOrderCreateViewModel vm)
     {
-        if(await _context.ProductionOrders.AnyAsync(po => po.OrderNumber == vm.OrderNumber))
+        var orderNumber = NormalizeOrderNumber(vm.OrderNumber);
+
+        if(await _context.ProductionOrders.AnyAsync(po => po.OrderNumber == orderNumber))
         {
             ModelState.AddModelError(nameof(vm.OrderNumber), "This order number already exists.");
         }
@@ -57,7 +68,7 @@ public class ProductionOrdersController : Controller
 
         var productionOrder = new ProductionOrder
         {
-            OrderNumber = vm.OrderNumber,
+            OrderNumber = orderNumber,
             ProductId = vm.ProductId!.Value,
             OrderQty = vm.OrderQty!.Value,
             DueDate = vm.DueDate
@@ -108,7 +119,8 @@ public class ProductionOrdersController : Controller
         {
             return Forbid();
         }
-        if(await _context.ProductionOrders.AnyAsync(po => po.OrderNumber == vm.OrderNumber && po.Id != id))
+        var orderNumber = NormalizeOrderNumber(vm.OrderNumber);
+        if(await _context.ProductionOrders.AnyAsync(po => po.OrderNumber == orderNumber && po.Id != id))
         {
             ModelState.AddModelError(nameof(vm.OrderNumber), "This order number already exists.");
         }
@@ -124,7 +136,7 @@ public class ProductionOrdersController : Controller
             return NotFound();
         }
 
-        productionOrder.OrderNumber = vm.OrderNumber;
+        productionOrder.OrderNumber = orderNumber;
         productionOrder.ProductId = vm.ProductId!.Value;
         productionOrder.OrderQty = vm.OrderQty!.Value;
         productionOrder.DueDate = vm.DueDate;
@@ -196,6 +208,65 @@ public class ProductionOrdersController : Controller
         return Json(product);
     }
 
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Import(IFormFile? file)
+    {
+        if (file is null || file.Length == 0)
+        {
+            return ImportFailed("Please select a CSV file");
+        }
+
+        if (!string.Equals(Path.GetExtension(file.FileName), ".csv", System.StringComparison.OrdinalIgnoreCase))
+        {
+            return ImportFailed("Only .csv files are supported.");
+        }
+
+        if(file.Length > MaxImportFileSize)
+        {
+            return ImportFailed($"The file is too large. Maximum size is {MaxImportFileSize / (1024 * 1024)} MB.");
+        }
+
+        var rows = new List<(int Line, ProductionOrderImportRowViewModel Row)>();
+        try
+        {
+            using var reader = new StreamReader(file.OpenReadStream(), Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
+            using var csv = new CsvReader(reader, CsvConfiguration(CultureInfo.InvariantCulture));
+
+            if (!csv.Read() || !csv.ReadHeader())
+            {
+                return ImportFailed("The file is empty.");
+            }
+
+            csv.ValidateHeader<ProductionOrderImportRowViewModel>();
+
+            while (csv.Read())
+            {
+                rows.Add((csv.Parser.Row, csv.GetRecord<ProductionOrderImportRowViewModel>()!));
+            }
+
+        }
+        catch (HeaderValidationException)
+        {
+            return ImportFailed("Invalid header. Required columns: OrderNumber, ProductCode, OrderQty, DueDate.");
+        }
+        catch (CsvHelperException ex)
+        {
+            return ImportFailed($"Failed to read the CSV file (line {ex.Context?.Parser?.Row}).");
+        }
+
+        if (rows.Count == 0)
+        {
+            return ImportFailed("The file contains no data rows.");
+        }
+
+        if (rows.Count > MaxImportRows)
+        {
+            return ImportFailed($"Too many rows. Maximun is {MaxImportRows} rows per import.");
+        }
+
+    }
+
     private async Task RepopulateProductNameAsync(int? productId, Action<string> setName)
     {
         if(productId is null)
@@ -213,6 +284,15 @@ public class ProductionOrdersController : Controller
             setName(name);
         }
     }
+    private IActionResult ImportFailed(params string[] errors)
+    {
+        TempData["ImportErrors"] = errors.Length > MaxErrorsToShow
+            ? errors.Take(MaxErrorsToShow).Append($"...and {errors.Length - MaxErrorsToShow} more errors.").ToArray()
+            : errors;
+        return RedirectToAction(nameof(Index));
+    }
+
+    private static string NormalizeOrderNumber(string value) => value.Trim().ToUpperInvariant();
 
 
 }
