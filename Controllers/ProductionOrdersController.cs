@@ -265,6 +265,49 @@ public class ProductionOrdersController : Controller
             return ImportFailed($"Too many rows. Maximun is {MaxImportRows} rows per import.");
         }
 
+        var errors = new List<string>();
+        var parsed = new List<ParsedImportRow>();
+
+        var productCodes = rows
+            .Select(r => r.Row.ProductCode?.Trim())
+            .Where(c => !string.IsNullOrEmpty(c))
+            .Distinct()
+            .ToList();
+
+        var productMap = await _context.Products
+            .Where(p => productCodes.Contains(p.ProductCode))
+            .ToDictionaryAsync(p => p.ProductCode, p => p.Id);
+
+        foreach (var (line, row) in rows)
+        {
+            var orderNumber = NormalizeOrderNumber(row.OrderNumber?.Trim() ?? string.Empty);
+            var productCode = row.ProductCode?.Trim();
+            var rowHasError = false;
+
+            if (string.IsNullOrEmpty(orderNumber))
+            {
+                errors.Add($"Line {line}: Order Number is required.");
+                rowHasError = true;
+            }
+
+            if (string.IsNullOrEmpty(productCode))
+            {
+                errors.Add($"Line {line}: Product Code is required.");
+                rowHasError = true;
+            }
+            else if (!productMap.ContainsKey(productCode))
+            {
+                errors.Add($"Line {line}: Product Code '{productCode}' does not exist.");
+                rowHasError = true;
+            }
+            
+
+
+
+
+
+        }
+
     }
 
     private async Task RepopulateProductNameAsync(int? productId, Action<string> setName)
