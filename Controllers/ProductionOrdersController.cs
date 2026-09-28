@@ -6,6 +6,9 @@ using DailyWorkReport.ViewModels.ProductionOrder;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using CsvHelper;
+using System.Globalization;
+using CsvHelper.Configuration;
 
 namespace DailyWorkReport.Controllers;
 
@@ -231,7 +234,7 @@ public class ProductionOrdersController : Controller
         try
         {
             using var reader = new StreamReader(file.OpenReadStream(), Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
-            using var csv = new CsvReader(reader, CsvConfiguration(CultureInfo.InvariantCulture));
+            using var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture));
 
             if (!csv.Read() || !csv.ReadHeader())
             {
@@ -281,7 +284,7 @@ public class ProductionOrdersController : Controller
         foreach (var (line, row) in rows)
         {
             var orderNumber = NormalizeOrderNumber(row.OrderNumber?.Trim() ?? string.Empty);
-            var productCode = row.ProductCode?.Trim();
+            var productCode = row.ProductCode?.Trim() ?? string.Empty;
             var rowHasError = false;
 
             if (string.IsNullOrEmpty(orderNumber))
@@ -300,12 +303,23 @@ public class ProductionOrdersController : Controller
                 errors.Add($"Line {line}: Product Code '{productCode}' does not exist.");
                 rowHasError = true;
             }
-            
 
+            if (!int.TryParse(row.OrderQty?.Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var qty) || qty < 1)
+            {
+                errors.Add($"Line {line}: Order Quantity must be a whole number of at least 1.");
+                rowHasError = true;
+            }
 
+            if (!DateOnly.TryParseExact(row.DueDate?.Trim(), DueDateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dueDate))
+            {
+                errors.Add($"Line {line}: Due Date must be in the format YYYY-MM-DD or YYYY/M/D.");
+                rowHasError = true;
+            }
 
-
-
+            if (!rowHasError)
+            {
+                parsed.Add(new ParsedImportRow(line, orderNumber, productCode, qty, dueDate));
+            }
         }
 
     }
