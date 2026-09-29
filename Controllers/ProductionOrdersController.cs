@@ -322,6 +322,19 @@ public class ProductionOrdersController : Controller
             }
         }
 
+        var duplicatesInFile = parsed
+            .GroupBy(x => x.OrderNumber, StringComparer.Ordinal)
+            .Where(g => g.Count() > 1)
+            .Select(g => g.Key)
+            .ToList();
+        
+        if (duplicatesInFile.Count > 0)
+        {
+            erros.Add("Duplicate Order Numbers in the file: " + JoinLimited(duplicatesInFile, MaxDuplicatesToShow));
+        }
+
+        
+
     }
 
     private async Task RepopulateProductNameAsync(int? productId, Action<string> setName)
@@ -347,6 +360,12 @@ public class ProductionOrdersController : Controller
             ? errors.Take(MaxErrorsToShow).Append($"...and {errors.Length - MaxErrorsToShow} more errors.").ToArray()
             : errors;
         return RedirectToAction(nameof(Index));
+    }
+
+    private static string JoinLimited(List<string> values, int limit)
+    {
+        var text = string.Join(", ", values.Take(limit));
+        return values.Count > limit ? $"{text}, ...and {values.Count - limit} more" : text;
     }
 
     private static string NormalizeOrderNumber(string value) => value.Trim().ToUpperInvariant();
