@@ -330,8 +330,24 @@ public class ProductionOrdersController : Controller
         
         if (duplicatesInFile.Count > 0)
         {
-            erros.Add("Duplicate Order Numbers in the file: " + JoinLimited(duplicatesInFile, MaxDuplicatesToShow));
+            errors.Add("Duplicate Order Numbers in the file: " + JoinLimited(duplicatesInFile, MaxDuplicatesToShow));
         }
+
+        var orderNumbers = parsed
+            .Select(x => x.OrderNumber)
+            .Distinct()
+            .ToList();
+
+        var existingNumbers = await _context.ProductionOrders
+            .Where(o => orderNumbers.Contains(o.OrderNumber))
+            .Select(o => o.OrderNumber)
+            .ToListAsync();
+
+        if (existingNumbers.Count > 0)
+        {
+            errors.Add("These order numbers are already registered: " + JoinLimited(existingNumbers, MaxDuplicatesToShow));
+        }
+
 
         
 
