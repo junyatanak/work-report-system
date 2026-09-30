@@ -10,6 +10,7 @@ using DailyWorkReport.Models;
 using DailyWorkReport.ViewModels.Product;
 using Microsoft.AspNetCore.Authorization;
 using DailyWorkReport.Constants;
+using DailyWorkReport.Domain;
 
 namespace DailyWorkReport.Controllers
 {
@@ -65,9 +66,19 @@ namespace DailyWorkReport.Controllers
         {
             if (ModelState.IsValid)
             {
+                var productCode = CodeNormalizer.Normalize(model.ProductCode);
+
+                var exists = await _context.Products.AnyAsync(p => p.ProductCode == productCode);
+                if (exists)
+                {
+                    ModelState.AddModelError(nameof(model.ProductCode), "This product code is already registered.");
+                    ViewData["WorkClassId"] = new SelectList(_context.WorkClasses, "Id", "Name", model.WorkClassId);
+                    return View(model);
+                }
+
                 var product = new Product
                 {
-                    ProductCode = model.ProductCode,
+                    ProductCode = productCode,
                     Name = model.Name,
                     WorkClassId = model.WorkClassId!.Value
                 };
@@ -110,6 +121,17 @@ namespace DailyWorkReport.Controllers
 
             if (ModelState.IsValid)
             {
+                product.ProductCode = CodeNormalizer.Normalize(product.ProductCode);
+
+                var duplicate = await _context.Products
+                    .AnyAsync(p => p.Id != product.Id && p.ProductCode == product.ProductCode);
+                if (duplicate)
+                {
+                    ModelState.AddModelError(nameof(product.ProductCode), "This product code is already registered.");
+                    ViewData["WorkClassId"] = new SelectList(_context.WorkClasses, "Id", "Name", product.WorkClassId);
+                    return View(product);
+                }
+
                 try
                 {
                     _context.Update(product);
