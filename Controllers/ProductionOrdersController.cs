@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using CsvHelper;
 using System.Globalization;
 using CsvHelper.Configuration;
+using DailyWorkReport.Domain;
 
 namespace DailyWorkReport.Controllers;
 
@@ -56,7 +57,7 @@ public class ProductionOrdersController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(ProductionOrderCreateViewModel vm)
     {
-        var orderNumber = NormalizeOrderNumber(vm.OrderNumber);
+        var orderNumber = CodeNormalizer.Normalize(vm.OrderNumber);
 
         if(await _context.ProductionOrders.AnyAsync(po => po.OrderNumber == orderNumber))
         {
@@ -122,7 +123,7 @@ public class ProductionOrdersController : Controller
         {
             return Forbid();
         }
-        var orderNumber = NormalizeOrderNumber(vm.OrderNumber);
+        var orderNumber = CodeNormalizer.Normalize(vm.OrderNumber);
         if(await _context.ProductionOrders.AnyAsync(po => po.OrderNumber == orderNumber && po.Id != id))
         {
             ModelState.AddModelError(nameof(vm.OrderNumber), "This order number already exists.");
@@ -272,7 +273,7 @@ public class ProductionOrdersController : Controller
         var parsed = new List<ParsedImportRow>();
 
         var productCodes = rows
-            .Select(r => r.Row.ProductCode?.Trim())
+            .Select(r => CodeNormalizer.Normalize(r.Row.ProductCode))
             .Where(c => !string.IsNullOrEmpty(c))
             .Distinct()
             .ToList();
@@ -283,8 +284,8 @@ public class ProductionOrdersController : Controller
 
         foreach (var (line, row) in rows)
         {
-            var orderNumber = NormalizeOrderNumber(row.OrderNumber?.Trim() ?? string.Empty);
-            var productCode = row.ProductCode?.Trim() ?? string.Empty;
+            var orderNumber = CodeNormalizer.Normalize(row.OrderNumber);
+            var productCode = CodeNormalizer.Normalize(row.ProductCode);
             var rowHasError = false;
 
             if (string.IsNullOrEmpty(orderNumber))
@@ -349,7 +350,7 @@ public class ProductionOrdersController : Controller
         }
 
 
-        
+
 
     }
 
