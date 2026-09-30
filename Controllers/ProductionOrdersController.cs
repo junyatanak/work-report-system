@@ -349,8 +349,34 @@ public class ProductionOrdersController : Controller
             errors.Add("These order numbers are already registered: " + JoinLimited(existingNumbers, MaxDuplicatesToShow));
         }
 
+        if (errors.Count > 0)
+        {
+            return ImportFailed(errors.ToArray());
+        }
 
+        foreach (var x in parsed)
+        {
+            _context.ProductionOrders.Add(new ProductionOrder
+            {
+                OrderNumber = x.OrderNumber,
+                ProductId = productMap[x.ProductCode],
+                OrderQty = x.OrderQty,
+                DueDate = x.DueDate
+            });
+        }
 
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateException)
+        {
+            return ImportFailed("Some order numbers were registered by another user during the import. Please try again.");  
+        }
+
+        TempData["ImportSuccess"] = $"{parsed.Count} production orders were imported.";
+
+        return RedirectToAction(nameof(Index));
 
     }
 
@@ -384,8 +410,5 @@ public class ProductionOrdersController : Controller
         var text = string.Join(", ", values.Take(limit));
         return values.Count > limit ? $"{text}, ...and {values.Count - limit} more" : text;
     }
-
-    private static string NormalizeOrderNumber(string value) => value.Trim().ToUpperInvariant();
-
 
 }
