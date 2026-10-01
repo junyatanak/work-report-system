@@ -19,10 +19,12 @@ public class WorkReportsController : Controller
 {
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
-    public WorkReportsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+    private readonly ILogger<WorkReportsController> _logger;
+    public WorkReportsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ILogger<WorkReportsController> logger)
     {
         _context = context;
         _userManager = userManager;
+        _logger = logger;
     }
 
     public async Task<IActionResult> Index(WorkReportIndexFilterViewModel filter)
@@ -152,7 +154,19 @@ public class WorkReportsController : Controller
         }
 
         _context.WorkReports.Add(workReport);
-        await _context.SaveChangesAsync();
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateException ex)
+        {
+            _logger.LogError(ex, "Failed to save WorkReport. WorkDate={WorkDate}, ProductionOrderId={ProductionOrderId}", vm.WorkDate, vm.ProductionOrderId);
+            ModelState.AddModelError(string.Empty, "Failed to save the work report. Please try again. If the problem persistes, contact your administrator.");
+            
+            (vm.ProcessOptions, vm.WorkPatternOptions) = await RepopulateProcessWorkPatternOptionsAsync(vm.WorkClassId, vm.ProcessId);
+            await RepopulateWorkerNamesAsync(vm.WorkReportWorkers);
+            return View(vm);
+        }
 
         return RedirectToAction(nameof(Index));
         
