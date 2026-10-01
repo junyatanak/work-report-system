@@ -367,8 +367,28 @@ public class WorkReportsController : Controller
                 ProducedQty = workerInput.ProducedQty!.Value
             });
         }
+        try
+        {
+            await _context.SaveChangesAsync();    
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            _logger.LogWarning(ex, "Concurrency conflict on WorkReport. Id={Id}", id);
+            ModelState.AddModelError(string.Empty, "This work report was updated by another user. Please reload the page and try again.");
 
-        await _context.SaveChangesAsync();
+            (vm.ProcessOptions, vm.WorkPatternOptions) = await RepopulateProcessWorkPatternOptionsAsync(vm.WorkClassId, vm.ProcessId);
+            await RepopulateWorkerNamesAsync(vm.WorkReportWorkers);
+            return View(vm);
+        }
+        catch (DbUpdateException ex)
+        {
+            _logger.LogError(ex, "Failed to update WorkReport. Id={Id}", id);
+            ModelState.AddModelError(string.Empty, "Failed to update the work report. Please try again. If the problem persists, contact your administrator.");
+
+            (vm.ProcessOptions, vm.WorkPatternOptions) = await RepopulateProcessWorkPatternOptionsAsync(vm.WorkClassId, vm.ProcessId);
+            await RepopulateWorkerNamesAsync(vm.WorkReportWorkers);
+            return View(vm);
+        }
 
         return RedirectToAction(nameof(Index));
         
