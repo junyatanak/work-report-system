@@ -255,6 +255,7 @@ public class WorkReportsController : Controller
             WorkClassId = workReport.ProductionOrder.Product.WorkClassId,
             ProcessId = workReport.ProcessId,
             WorkPatternId = workReport.WorkPatternId,
+            RowVersion = workReport.RowVersion,
             WorkReportWorkers = workReport.WorkReportWorkers.Select(wr => new WorkReportWorkerInputViewModel
             {
                 WorkerNumber = wr.Worker.WorkerNumber,
@@ -351,6 +352,11 @@ public class WorkReportsController : Controller
         workReport.WorkDate = vm.WorkDate;
         workReport.ProcessId = vm.ProcessId!.Value;
         workReport.WorkPatternId = vm.WorkPatternId!.Value;
+
+        _context.Entry(workReport).Property(w => w.RowVersion).OriginalValue = vm.RowVersion;
+
+        _context.Entry(workReport).State = EntityState.Modified;
+
 
         _context.WorkReportWorkers.RemoveRange(workReport.WorkReportWorkers);
 

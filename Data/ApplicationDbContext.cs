@@ -26,5 +26,16 @@ public class ApplicationDbContext:IdentityDbContext<ApplicationUser>
     public DbSet<WorkReport> WorkReports => Set<WorkReport>();
     public DbSet<WorkReportWorker> WorkReportWorkers => Set<WorkReportWorker>();
 
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        foreach (var entry in ChangeTracker.Entries<WorkReport>()
+            .Where(e => e.State == EntityState.Modified))
+        {
+            entry.Entity.RowVersion = Guid.NewGuid();
+        }
+
+        return base.SaveChangesAsync(cancellationToken);
+    }
+
 
 }

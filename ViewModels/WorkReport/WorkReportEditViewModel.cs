@@ -22,8 +22,11 @@ public class WorkReportEditViewModel
     public int? ProcessId { get; set; }
     [Required(ErrorMessage = "Work pattern is required.")]
     public int? WorkPatternId { get; set; }
+    public Guid RowVersion { get; set; }
 
     public List<WorkReportWorkerInputViewModel> WorkReportWorkers { get; set; } = new();
     public List<SelectListItem> ProcessOptions { get; set; } = new();
     public List<SelectListItem> WorkPatternOptions { get; set; } = new();
+
+
 }
