@@ -19,4 +19,7 @@ public class WorkReport
     public ICollection<WorkReportWorker> WorkReportWorkers { get;} = new List<WorkReportWorker>();
     public ApplicationUser User { get; set; } = null!;
 
+    [ConcurrencyCheck]
+    public Guid RowVersion { get; set; } = Guid.NewGuid();
+
 }
