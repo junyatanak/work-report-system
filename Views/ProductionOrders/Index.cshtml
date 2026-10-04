@@ -7,9 +7,60 @@
 
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h1 class="h3 mb-0">Production Orders</h1>
-    <a asp-action="Create" class="btn btn-primary btn-sm">
-        <i class="bi bi-plus-lg me-1"></i>Register Order
-    </a>
+    <div class="d-flex gap-2">
+        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#importModal">
+            <i class="bi bi-upload me-1"></i>Import Csv
+        </button>
+        <a asp-action="Create" class="btn btn-primary btn-sm">
+            <i class="bi bi-plus-lg me-1"></i>Register Order
+        </a>
+    </div>
+</div>
+
+@if (TempData["ImportSuccess"] is string successMessage)
+{
+    <div class="alert alert-success">@successMessage</div>
+}
+
+@if (TempData["ImportErrors"] is IEnumerable<string> importErrors && importErrors.Any())
+{
+    <div class="alert alert-danger">
+        <p class="fw-semibold mb-1">Import was cancelled. No data was imported.</p>
+        <ul class="mb-0">
+            @foreach (var e in importErrors)
+            {
+                <li>@e</li>
+            }
+        </ul>
+    </div>
+}
+
+<div class="modal fade" id="importModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <form asp-action="Import" method="post" enctype="multipart/form-data" class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title h5">Import Production Orders (CSV)</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="file" name="file" accept=".csv" class="form-control mb-3" required />
+                <p class="small text-muted mb-1">Required columns (header row):</p>
+                <code class="small">OrderNumber,ProductCode,OrderQty,DueDate</code>
+                <div class="mt-2">
+                    <a asp-action="DownloadImportTemplate" class="small">
+                        <i class="bi bi-download me-1"></i>Download template
+                    </a>
+                </div>
+                <p class="small text-muted mt-2 mb-0">
+                    If any row has an error or an order number already exists, nothing will be imported.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary btn-sm">Import</button>
+            </div>
+        </form>
+    </div>
 </div>
 
 <table class="table table-hover align-middle">

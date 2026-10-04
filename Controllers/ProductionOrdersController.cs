@@ -24,6 +24,7 @@ public class ProductionOrdersController : Controller
     private const int MaxErrorsToShow = 15;
     private const int MaxDuplicatesToShow = 10; 
     private static readonly string[] DueDateFormats = { "yyyy-M-d", "yyyy/M/d" };
+    private static readonly string[] ImportColumns = { "OrderNumber", "ProductCode", "OrderQty", "DueDate" };
     private sealed record ParsedImportRow(int Line, string OrderNumber, string ProductCode, int OrderQty, DateOnly DueDate);
 
     public ProductionOrdersController(ApplicationDbContext context, ILogger<ProductionOrdersController> logger)
@@ -289,7 +290,7 @@ public class ProductionOrdersController : Controller
         }
         catch (HeaderValidationException)
         {
-            return ImportFailed("Invalid header. Required columns: OrderNumber, ProductCode, OrderQty, DueDate.");
+            return ImportFailed($"Invalid header. Required columns: {string.Join(", ", ImportColumns)}.");
         }
         catch (CsvHelperException ex)
         {
@@ -415,6 +416,16 @@ public class ProductionOrdersController : Controller
 
         return RedirectToAction(nameof(Index));
 
+    }
+
+    [HttpGet]
+    public IActionResult DownloadImportTemplate()
+    {
+        var encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: true);
+        var content = string.Join(",", ImportColumns) + "\r\n";
+        var bytes = encoding.GetPreamble().Concat(encoding.GetBytes(content)).ToArray();
+
+        return File(bytes, "text/csv", "production_orders_template.csv");
     }
 
     private async Task RepopulateProductNameAsync(int? productId, Action<string> setName)
