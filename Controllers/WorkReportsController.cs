@@ -283,6 +283,7 @@ public class WorkReportsController : Controller
         }
         var workReport = await _context.WorkReports
             .Include(w => w.WorkReportWorkers)
+            .Include(w => w.ProductionOrder)
             .FirstOrDefaultAsync(w => w.Id == id);
 
         if (workReport == null)
@@ -337,7 +338,7 @@ public class WorkReportsController : Controller
         }
 
         var totalProducedQty = vm.WorkReportWorkers.Sum(w => w.ProducedQty ?? 0);
-        if (totalProducedQty > vm.OrderQty)
+        if (totalProducedQty > workReport.ProductionOrder.OrderQty)
         {
             ModelState.AddModelError(string.Empty, "Total produced quantity exceeds the order quantity.");
         }
@@ -380,7 +381,7 @@ public class WorkReportsController : Controller
         catch (DbUpdateConcurrencyException ex)
         {
             _logger.LogWarning(ex, "Concurrency conflict on WorkReport. Id={Id}", id);
-            ModelState.AddModelError(string.Empty, "This work report was updated by another user. Please reload the page and try again.");
+            ViewBag.ConflictDetected = true;
 
             (vm.ProcessOptions, vm.WorkPatternOptions) = await RepopulateProcessWorkPatternOptionsAsync(vm.WorkClassId, vm.ProcessId);
             await RepopulateWorkerNamesAsync(vm.WorkReportWorkers);

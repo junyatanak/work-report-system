@@ -10,6 +10,7 @@ using CsvHelper;
 using System.Globalization;
 using CsvHelper.Configuration;
 using DailyWorkReport.Domain;
+using DocumentFormat.OpenXml.EMMA;
 
 namespace DailyWorkReport.Controllers;
 
@@ -17,6 +18,7 @@ namespace DailyWorkReport.Controllers;
 public class ProductionOrdersController : Controller
 {
     private readonly ApplicationDbContext _context;
+    private readonly ILogger<ProductionOrdersController> _logger;
     private const long MaxImportFileSize = 1 * 1024 * 1024;
     private const int MaxImportRows = 1000;
     private const int MaxErrorsToShow = 15;
@@ -24,9 +26,10 @@ public class ProductionOrdersController : Controller
     private static readonly string[] DueDateFormats = { "yyyy-M-d", "yyyy/M/d" };
     private sealed record ParsedImportRow(int Line, string OrderNumber, string ProductCode, int OrderQty, DateOnly DueDate);
 
-    public ProductionOrdersController(ApplicationDbContext context)
+    public ProductionOrdersController(ApplicationDbContext context, ILogger<ProductionOrdersController> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     public async Task<IActionResult> Index()
@@ -79,7 +82,18 @@ public class ProductionOrdersController : Controller
         };
 
         _context.ProductionOrders.Add(productionOrder);
-        await _context.SaveChangesAsync();
+        try
+        {
+            await _context.SaveChangesAsync();        
+        }
+        catch (DbUpdateException ex)
+        {
+            _logger.LogError(ex, "Failed to save ProductionOrder. OrderNumber={OrderNumber}", orderNumber);
+            ModelState.AddModelError(string.Empty, "Failed to save the production order. Please try again. If the problem persists, contact your administrator.");
+
+            await RepopulateProductNameAsync(vm.ProductId, name => vm.ProductName = name);
+            return View(vm);
+        }
 
         return RedirectToAction(nameof(Index));
     }
@@ -106,7 +120,8 @@ public class ProductionOrdersController : Controller
             ProductName = productionOrder.Product.Name,
             ProductId = productionOrder.ProductId,
             OrderQty = productionOrder.OrderQty,
-            DueDate = productionOrder.DueDate
+            DueDate = productionOrder.DueDate,
+            RowVersion = productionOrder.RowVersion
         };
         return View(vm);
 
@@ -145,7 +160,29 @@ public class ProductionOrdersController : Controller
         productionOrder.OrderQty = vm.OrderQty!.Value;
         productionOrder.DueDate = vm.DueDate;
 
-        await _context.SaveChangesAsync();
+        _context.Entry(productionOrder).Property(p => p.RowVersion).OriginalValue = vm.RowVersion;
+        _context.Entry(productionOrder).State = EntityState.Modified;
+
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            _logger.LogWarning(ex, "Concurrency conflict on ProductionOrder. Id={Id}", id);
+            ViewBag.ConflictDetected = true;
+
+            await RepopulateProductNameAsync(vm.ProductId, name => vm.ProductName = name);
+            return View(vm);
+        }
+        catch (DbUpdateException ex)
+        {
+            _logger.LogError(ex, "Failed to update ProductionOrder. Id={Id}", id);
+            ModelState.AddModelError(string.Empty, "Failed to update the production order. Please try again. If the problem persists, contact your administrator.");
+
+            await RepopulateProductNameAsync(vm.ProductId, name => vm.ProductName = name);
+            return View(vm);
+        }
 
         return RedirectToAction(nameof(Index));
         

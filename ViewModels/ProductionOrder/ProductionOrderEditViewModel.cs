@@ -26,5 +26,6 @@ public class ProductionOrderEditViewModel
     [Required(ErrorMessage = "Due date is required.")]
     [Display(Name = "Due Date")]
     public DateOnly DueDate { get; set; }
+    public Guid RowVersion { get; set; }
     
 }

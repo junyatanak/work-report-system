@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DailyWorkReport.Models;
 
-public class WorkReport
+public class WorkReport : IHasRowVersion
 {
     public int Id { get; set; }
     public DateOnly WorkDate { get; set; }

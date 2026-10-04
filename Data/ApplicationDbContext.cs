@@ -28,7 +28,7 @@ public class ApplicationDbContext:IdentityDbContext<ApplicationUser>
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        foreach (var entry in ChangeTracker.Entries<WorkReport>()
+        foreach (var entry in ChangeTracker.Entries<IHasRowVersion>()
             .Where(e => e.State == EntityState.Modified))
         {
             entry.Entity.RowVersion = Guid.NewGuid();
