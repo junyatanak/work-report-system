@@ -14,3 +14,41 @@
         return Context.Request.PathBase.Add(Context.Request.Path).Add(qb.ToQueryString());
     }
 }
+
+@if (Model.TotalCount > 0)
+{
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <div class="small text-muted">
+            Showing @Model.FirstItem-@Model.LastItem of @Model.TotalCount
+        </div>
+
+        @if (Model.TotalPages > 1)
+        {
+            var prev = 0;
+            <nav aria-label="Pagination">
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item @(Model.HasPrevious ? "" : "disabled")">
+                        <a class="page-link" href="@PageUrl(Model.Page - 1)">Previous</a>
+                    </li>
+
+                    @foreach (var p in Enumerable.Range(1, Model.TotalPages)
+                        .Where(p => p == 1 || p == Model.TotalPages || Math.Abs(p - Model.Page) <= 2))
+                    {
+                        if (p - prev > 1)
+                        {
+                            <li class="page-item disabled"><span class="page-link">…</span></li>
+                        }
+                        <li class="page-item @(p == Model.Page ? "active" : "")">
+                            <a class="page-link" href="@PageUrl(p)">@p</a>
+                        </li>
+                        prev = p;
+                    }
+
+                    <li class="page-item @(Model.HasNext ? "" : "disabled")">
+                        <a class="page-link" href="@PageUrl(Model.Page + 1)">Next</a>
+                    </li>                    
+                </ul>
+            </nav>
+        }
+    </div>
+}
