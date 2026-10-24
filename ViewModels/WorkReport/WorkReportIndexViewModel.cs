@@ -1,7 +1,8 @@
+using DailyWorkReport.ViewModels.Paging;
+
 namespace DailyWorkReport.ViewModels.WorkReport;
 
-public class WorkReportIndexViewModel
+public class WorkReportIndexViewModel : PagedViewModel<WorkReportIndexItemViewModel>
 {
     public WorkReportIndexFilterViewModel Filter { get; set; } = new();
-    public List<WorkReportIndexItemViewModel> Items { get; set; } = new();
 }
