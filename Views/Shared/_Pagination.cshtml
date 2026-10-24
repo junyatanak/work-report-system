@@ -1,0 +1,16 @@
+@model DailyWorkReport.ViewModels.Paging.PagingInfo
+@using Microsoft.AspNetCore.Http.Extensions
+
+@functions {
+    private string PageUrl(int page)
+    {
+        var qb = new QueryBuilder();
+        foreach (var kv in Context.Request.Query)
+        {
+            if (string.Equals(kv.Key, "page", StringComparison.OrdinalIgnoreCase)) continue;
+            foreach (var v in kv.Value) qb.Add(kv.Key, v ?? "");
+        }
+        qb.Add("page", page.ToString());
+        return Context.Request.PathBase.Add(Context.Request.Path).Add(qb.ToQueryString());
+    }
+}
