@@ -1,5 +1,4 @@
-@model List<DailyWorkReport.ViewModels.ProductionOrder.ProductionOrderDisplayViewModel>
-
+@model PagedViewModel<DailyWorkReport.ViewModels.ProductionOrder.ProductionOrderDisplayViewModel>
 
 @{
     ViewData["Title"] ="Production Orders";
@@ -75,7 +74,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach(var item in Model)
+        @foreach(var item in Model.Items)
         {
             <tr>
                 <td>@item.OrderNumber</td>
@@ -105,7 +104,9 @@
     </tbody>
 </table>
 
-@if(!Model.Any())
+<partial name="_Pagination" model="Model.Paging" />
+
+@if(!Model.Items.Any())
 {
     <p class="text-muted">No production orders yet.</p>
 }

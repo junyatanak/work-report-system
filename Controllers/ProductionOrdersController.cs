@@ -11,6 +11,8 @@ using System.Globalization;
 using CsvHelper.Configuration;
 using DailyWorkReport.Domain;
 using DocumentFormat.OpenXml.EMMA;
+using DailyWorkReport.Extensions;
+using DailyWorkReport.ViewModels.Paging;
 
 namespace DailyWorkReport.Controllers;
 
@@ -33,9 +35,9 @@ public class ProductionOrdersController : Controller
         _logger = logger;
     }
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(int page = 1)
     {
-        var productionOrders = await _context.ProductionOrders
+        var query = _context.ProductionOrders
             .Include(po => po.Product)
             .OrderByDescending(po => po.Id)
             .Select(po => new ProductionOrderDisplayViewModel
@@ -46,10 +48,15 @@ public class ProductionOrdersController : Controller
                 OrderQty = po.OrderQty,
                 DueDate = po.DueDate,
                 IsReported = po.WorkReports.Any()
-            })
-            .ToListAsync();
+            });
 
-        return View(productionOrders);
+        var (items, paging) = await query.ToPagedAsync(page, PagingInfo.DefaultPageSize);
+
+        return View(new PagedViewModel<ProductionOrderDisplayViewModel>
+        {
+            Items = items,
+            Paging = paging
+        });
     }
     
     public IActionResult Create()
