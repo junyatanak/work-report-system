@@ -11,6 +11,8 @@ using DailyWorkReport.Constants;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using ClosedXML.Excel;
 using Microsoft.VisualBasic;
+using DailyWorkReport.Extensions;
+using DailyWorkReport.ViewModels.Paging;
 
 
 namespace DailyWorkReport.Controllers;
@@ -27,7 +29,7 @@ public class WorkReportsController : Controller
         _logger = logger;
     }
 
-    public async Task<IActionResult> Index(WorkReportIndexFilterViewModel filter)
+    public async Task<IActionResult> Index(WorkReportIndexFilterViewModel filter, int page = 1)
     {
         var query = ApplyFilter(_context.WorkReports, filter);     
         query = ApplySort(query, filter.SortBy, filter.SortDescending);
@@ -35,7 +37,7 @@ public class WorkReportsController : Controller
         var currentUserId = _userManager.GetUserId(User);
         var isAdmin = User.IsInRole("Admin");
 
-        var items = await query
+        var itemsQuery = query
             .Select(w => new WorkReportIndexItemViewModel
             {
                 Id = w.Id,
@@ -46,13 +48,15 @@ public class WorkReportsController : Controller
                 TotalProducedQty = w.WorkReportWorkers.Sum(wr => wr.ProducedQty),
                 ReporterName = w.User.UserName ?? string.Empty,
                 CanEdit = isAdmin || w.UserId == currentUserId
-            })
-            .ToListAsync();
+            });
+
+        var (items, paging) = await itemsQuery.ToPagedAsync(page, PagingInfo.DefaultPageSize);
 
         var vm = new WorkReportIndexViewModel
         {
             Filter = filter,
-            Items = items
+            Items = items,
+            Paging = paging
         };
 
         return View(vm);        
