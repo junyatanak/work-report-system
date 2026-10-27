@@ -734,7 +734,7 @@ public class WorkReportsController : Controller
         }
     }
 
-    private static IQueryable<WorkReport> ApplySort(IQueryable<WorkReport> query, string? sortBy, bool descending)
+    private static IOrderedQueryable<WorkReport> ApplySort(IQueryable<WorkReport> query, string? sortBy, bool descending)
     {
         Expression<Func<WorkReport, object>> keySelector = sortBy switch
         {
@@ -746,7 +746,11 @@ public class WorkReportsController : Controller
             _ => w => w.WorkDate
         };
 
-        return descending ? query.OrderByDescending(keySelector) : query.OrderBy(keySelector);
+        var ordered = descending 
+            ? query.OrderByDescending(keySelector) 
+            : query.OrderBy(keySelector);
+
+        return ordered.ThenBy(w => w.Id);
     }
 
     private IQueryable<WorkReport> ApplyFilter(IQueryable<WorkReport> query, WorkReportIndexFilterViewModel filter)
