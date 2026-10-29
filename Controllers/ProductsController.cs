@@ -11,6 +11,8 @@ using DailyWorkReport.ViewModels.Product;
 using Microsoft.AspNetCore.Authorization;
 using DailyWorkReport.Constants;
 using DailyWorkReport.Domain;
+using DailyWorkReport.Extensions;
+using DailyWorkReport.ViewModels.Paging;
 
 namespace DailyWorkReport.Controllers
 {
@@ -25,10 +27,26 @@ namespace DailyWorkReport.Controllers
         }
 
         // GET: Products
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
-            var applicationDbContext = _context.Products.Include(p => p.WorkClass);
-            return View(await applicationDbContext.ToListAsync());
+            var query = _context.Products
+                .OrderBy(p => p.Name)
+                .Select(p => new ProductDisplayViewModel
+                {
+                    Id = p.Id,
+                    ProductCode = p.ProductCode,
+                    Name = p.Name,
+                    WorkClassName = p.WorkClass.Name
+                });
+
+            var (items, paging) = await query.ToPagedAsync(page, PagingInfo.DefaultPageSize);
+
+
+            return View(new PagedViewModel<ProductDisplayViewModel>
+            {
+                Items = items,
+                Paging = paging
+            });
         }
 
         // GET: Products/Details/5
