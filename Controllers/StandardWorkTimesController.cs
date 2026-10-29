@@ -11,6 +11,8 @@ using DailyWorkReport.Domain;
 using DailyWorkReport.ViewModels.StandardWorkTime;
 using Microsoft.AspNetCore.Authorization;
 using DailyWorkReport.Constants;
+using DailyWorkReport.Extensions;
+using DailyWorkReport.ViewModels.Paging;
 
 namespace DailyWorkReport.Controllers
 {
@@ -25,9 +27,12 @@ namespace DailyWorkReport.Controllers
         }
 
         // GET: StandardWorkTimes
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
-            var vm = _context.StandardWorkTimes.Include(s => s.Process).Include(s => s.WorkClass).Include(s => s.WorkPattern)
+            var query = _context.StandardWorkTimes
+            .OrderBy(s => s.WorkClass.Name)
+            .ThenBy(s => s.Process.Name)
+            .ThenBy(s => s.WorkPattern.Name)
             .Select(s => new StandardWorkTimeDisplayViewModel
             {
                 Id = s.Id,
@@ -36,7 +41,14 @@ namespace DailyWorkReport.Controllers
                 WorkPatternName = s.WorkPattern.Name,
                 StandardWorkTime = StandardWorkTimeConverter.ToPcsPerHour(s.StandardCycleSeconds)
             });
-            return View(await vm.ToListAsync());
+
+            var (items, paging) = await query.ToPagedAsync(page, PagingInfo.DefaultPageSize);
+
+            return View(new PagedViewModel<StandardWorkTimeDisplayViewModel>
+            {
+                Items = items,
+                Paging = paging
+            });
         }
 
         // GET: StandardWorkTimes/Details/5
