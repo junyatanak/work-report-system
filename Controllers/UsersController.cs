@@ -1,6 +1,8 @@
 using System.Data;
 using DailyWorkReport.Constants;
+using DailyWorkReport.Extensions;
 using DailyWorkReport.Models;
+using DailyWorkReport.ViewModels.Paging;
 using DailyWorkReport.ViewModels.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -21,9 +23,15 @@ namespace DailyWorkReport.Controllers
             _roleManager = roleManager;
         }
         // GET: UsersController
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
+            var query = _userManager.Users.OrderBy(u => u.UserName);
+
+            var (users, paging) = await query.ToPagedAsync(page, PagingInfo.DefaultPageSize);
+
             var users = new List<UserDisplayViewModel>();
+
+
 
             foreach(var user in _userManager.Users)
             {
@@ -36,6 +44,9 @@ namespace DailyWorkReport.Controllers
                     RoleName = roleName
                 });
             }
+
+
+
 
             return View(users);
         }
