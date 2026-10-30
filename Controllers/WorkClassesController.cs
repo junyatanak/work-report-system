@@ -9,6 +9,9 @@ using DailyWorkReport.Data;
 using DailyWorkReport.Models;
 using Microsoft.AspNetCore.Authorization;
 using DailyWorkReport.Constants;
+using DailyWorkReport.ViewModels.WorkClass;
+using DailyWorkReport.Extensions;
+using DailyWorkReport.ViewModels.Paging;
 
 namespace DailyWorkReport.Controllers
 {
@@ -23,9 +26,23 @@ namespace DailyWorkReport.Controllers
         }
 
         // GET: WorkClasses
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
-            return View(await _context.WorkClasses.ToListAsync());
+            var query = _context.WorkClasses
+                .OrderBy(w => w.Name)
+                .Select(w => new WorkClassDisplayViewModel
+                {
+                    Id = w.Id,
+                    Name = w.Name
+                });
+
+            var (items, paging) = await query.ToPagedAsync(page, PagingInfo.DefaultPageSize);
+            
+            return View(new PagedViewModel<WorkClassDisplayViewModel>
+            {
+                Items = items,
+                Paging = paging
+            });
         }
 
         // GET: WorkClasses/Details/5

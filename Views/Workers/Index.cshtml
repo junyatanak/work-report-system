@@ -1,7 +1,7 @@
-@model IEnumerable<DailyWorkReport.Models.Worker>
+@model PagedViewModel<DailyWorkReport.ViewModels.Worker.WorkerDisplayViewModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Workers";
 }
 
 <h1>Workers</h1>
@@ -12,17 +12,13 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.WorkerNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
+            <th>Worker Number</th>
+            <th>Name</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.Items) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.WorkerNumber)
@@ -39,3 +35,5 @@
 }
     </tbody>
 </table>
+
+<partial name="_Pagination" model="Model.Paging" />
