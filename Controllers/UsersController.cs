@@ -29,26 +29,24 @@ namespace DailyWorkReport.Controllers
 
             var (users, paging) = await query.ToPagedAsync(page, PagingInfo.DefaultPageSize);
 
-            var users = new List<UserDisplayViewModel>();
-
-
+            var items = new List<UserDisplayViewModel>();
 
             foreach(var user in _userManager.Users)
             {
                 var roles = await _userManager.GetRolesAsync(user);
-                var roleName = roles.FirstOrDefault() ?? string.Empty;
-                users.Add(new UserDisplayViewModel
+                items.Add(new UserDisplayViewModel
                 {
                     Id = user.Id,
                     UserName = user.UserName ?? string.Empty,
-                    RoleName = roleName
+                    RoleName = roles.FirstOrDefault() ?? string.Empty
                 });
             }
 
-
-
-
-            return View(users);
+            return View(new PagedViewModel<UserDisplayViewModel>
+            {
+                Items = items,
+                Paging = paging
+            });
         }
         [HttpGet]
         public async Task<IActionResult> Create()
