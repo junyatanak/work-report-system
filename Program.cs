@@ -41,6 +41,13 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
+
+    if (provider == "Sqlite")
+    {
+        var db = services.GetRequiredService<ApplicationDbContext>();
+        await db.Database.EnsureCreatedAsync();
+    }
+
     await IdentitySeeder.SeedAsync(services);
 }
 
