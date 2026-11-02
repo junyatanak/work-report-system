@@ -4,10 +4,18 @@ using DailyWorkReport.Models;
 using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
+var provider = builder.Configuration["DatabaseProvider"];
+var connStr = builder.Configuration.GetConnectionString("DefaultConnection");
 
-builder.Services.AddDbContext<ApplicationDbContext>(
-    options => options.UseSqlite(
-        builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<ApplicationDbContext>(options => 
+{
+    switch (provider)
+    {
+        case "SqlServer": options.UseSqlServer(connStr); break;
+        case "Sqlite": options.UseSqlite(connStr); break;
+        default: throw new InvalidOperationException($"Unsupported DatabaseProvider: {provider}");
+    }
+});
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
