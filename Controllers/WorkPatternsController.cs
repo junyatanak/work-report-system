@@ -77,13 +77,26 @@ namespace DailyWorkReport.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name")] WorkPattern workPattern)
         {
-            var name = CodeNormalizer.Normalize(workPattern.Name);
-            workPattern.Name = name;
 
             if (ModelState.IsValid)
             {
+                workPattern.Name = CodeNormalizer.Normalize(workPattern.Name);
+                if (await _context.WorkPatterns.AnyAsync(w => w.Name == workPattern.Name))
+                {
+                    ModelState.AddModelError(nameof(WorkPattern.Name), "This workpattern name already exists.");
+                    return View(workPattern);
+                }
+
                 _context.Add(workPattern);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateException)
+                {
+                    ModelState.AddModelError(nameof(WorkPattern.Name), "This workpattern name already exists.");
+                    return View(workPattern);
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(workPattern);
@@ -117,11 +130,17 @@ namespace DailyWorkReport.Controllers
                 return NotFound();
             }
 
-            var name = CodeNormalizer.Normalize(workPattern.Name);
-            workPattern.Name = name;
 
             if (ModelState.IsValid)
             {
+                workPattern.Name = CodeNormalizer.Normalize(workPattern.Name);
+
+                if (await _context.WorkPatterns.AnyAsync(w => w.Name == workPattern.Name && w.Id != workPattern.Id))
+                {
+                    ModelState.AddModelError(nameof(WorkPattern.Name), "This workpattern name already exists.");
+                    return View(workPattern);
+                }
+
                 try
                 {
                     _context.Update(workPattern);
@@ -137,6 +156,11 @@ namespace DailyWorkReport.Controllers
                     {
                         throw;
                     }
+                }
+                catch (DbUpdateException)
+                {
+                    ModelState.AddModelError(nameof(WorkPattern.Name), "This workpattern name already exists.");
+                    return View(workPattern);
                 }
                 return RedirectToAction(nameof(Index));
             }

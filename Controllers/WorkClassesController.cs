@@ -77,13 +77,28 @@ namespace DailyWorkReport.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name")] WorkClass workClass)
         {
-            var name = CodeNormalizer.Normalize(workClass.Name);
-            workClass.Name = name;
-
             if (ModelState.IsValid)
             {
+                workClass.Name = CodeNormalizer.Normalize(workClass.Name);
+
+                if (await _context.WorkClasses.AnyAsync(w => w.Name == workClass.Name))
+                {
+                    ModelState.AddModelError(nameof(WorkClass.Name), "This workclass name already exists.");
+                    return View(workClass);
+                }
+                
                 _context.Add(workClass);
-                await _context.SaveChangesAsync();
+                
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateException)
+                {
+                    ModelState.AddModelError(nameof(WorkClass.Name), "This workclass name already exists.");
+                    return View(workClass);
+                }
+                
                 return RedirectToAction(nameof(Index));
             }
             return View(workClass);
@@ -117,11 +132,17 @@ namespace DailyWorkReport.Controllers
                 return NotFound();
             }
 
-            var name = CodeNormalizer.Normalize(workClass.Name);
-            workClass.Name = name;
 
             if (ModelState.IsValid)
             {
+                workClass.Name = CodeNormalizer.Normalize(workClass.Name);
+
+                if (await _context.WorkClasses.AnyAsync(w => w.Name == workClass.Name && w.Id != workClass.Id))
+                {
+                    ModelState.AddModelError(nameof(WorkClass.Name), "This workclass name already exists.");
+                    return View(workClass);
+                }
+
                 try
                 {
                     _context.Update(workClass);
@@ -137,6 +158,11 @@ namespace DailyWorkReport.Controllers
                     {
                         throw;
                     }
+                }
+                catch (DbUpdateException)
+                {
+                    ModelState.AddModelError(nameof(WorkClass.Name), "This workclass name already exists.");
+                    return View(workClass);
                 }
                 return RedirectToAction(nameof(Index));
             }
