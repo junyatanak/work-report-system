@@ -12,6 +12,7 @@ using DailyWorkReport.Constants;
 using DailyWorkReport.ViewModels.WorkPattern;
 using DailyWorkReport.Extensions;
 using DailyWorkReport.ViewModels.Paging;
+using DailyWorkReport.Domain;
 
 namespace DailyWorkReport.Controllers
 {
@@ -76,6 +77,9 @@ namespace DailyWorkReport.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name")] WorkPattern workPattern)
         {
+            var name = CodeNormalizer.Normalize(workPattern.Name);
+            workPattern.Name = name;
+
             if (ModelState.IsValid)
             {
                 _context.Add(workPattern);
@@ -112,6 +116,9 @@ namespace DailyWorkReport.Controllers
             {
                 return NotFound();
             }
+
+            var name = CodeNormalizer.Normalize(workPattern.Name);
+            workPattern.Name = name;
 
             if (ModelState.IsValid)
             {

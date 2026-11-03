@@ -12,6 +12,7 @@ using DailyWorkReport.Constants;
 using DailyWorkReport.ViewModels.Process;
 using DailyWorkReport.ViewModels.Paging;
 using DailyWorkReport.Extensions;
+using DailyWorkReport.Domain;
 
 namespace DailyWorkReport.Controllers
 {
@@ -76,10 +77,26 @@ namespace DailyWorkReport.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name")] Process process)
         {
+
             if (ModelState.IsValid)
             {
+                process.Name = CodeNormalizer.Normalize(process.Name);
+
+                if (await _context.Processes.AnyAsync(p => p.Name == process.Name))
+                {
+                    ModelState.AddModelError(nameof(Process.Name), "This process name already exists.");
+                    return View(process);
+                }
                 _context.Add(process);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateException)
+                {
+                    ModelState.AddModelError(nameof(Process.Name), "This process name already exists.");
+                    return View(process);
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(process);
@@ -115,6 +132,14 @@ namespace DailyWorkReport.Controllers
 
             if (ModelState.IsValid)
             {
+                process.Name = CodeNormalizer.Normalize(process.Name);
+
+                if (await _context.Processes.AnyAsync(p => p.Name == process.Name && p.Id != process.Id))
+                {
+                    ModelState.AddModelError(nameof(Process.Name), "This process name already exists.");
+                    return View(process);
+                }
+
                 try
                 {
                     _context.Update(process);
@@ -130,6 +155,11 @@ namespace DailyWorkReport.Controllers
                     {
                         throw;
                     }
+                }
+                catch (DbUpdateException)
+                {
+                    ModelState.AddModelError(nameof(Process.Name), "This process name already exists.");
+                    return View(process);
                 }
                 return RedirectToAction(nameof(Index));
             }
