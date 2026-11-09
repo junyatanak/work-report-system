@@ -28,5 +28,31 @@ public static class DevelopmentDataSeeder
             );
             await db.SaveChangesAsync();
         }
+
+        if (!await db.Processes.AnyAsync())
+        {
+            db.Processes.AddRange(
+                new Process { Name = "ASSEMBLY" },
+                new Process { Name = "PACKING"},
+                new Process { Name = "BLISTER-PACKING" },
+                new Process { Name = "INKJET-PRINTING" },
+                new Process { Name = "PAD-PRINTING" },
+                new Process { Name = "SILK-SCREEN-PRINTING" },
+                new Process { Name = "HEAT-TRANSFER-PRINTING" }
+            );
+            await db.SaveChangesAsync();
+        }
+
+        if (!await db.WorkPatterns.AnyAsync())
+        {
+            db.WorkPatterns.AddRange(
+                new WorkPattern { Name = "BULK" },
+                new WorkPattern { Name = "SLIDE-CARD-1P" },
+                new WorkPattern { Name = "OPP-BAG-1P" },
+                new WorkPattern { Name = "EXTRA-LABELING"},
+                new WorkPattern { Name = "JAN-STICKER-1P"}
+            );
+            await db.SaveChangesAsync();
+        }
     }
 }
