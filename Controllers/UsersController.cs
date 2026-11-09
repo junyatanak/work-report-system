@@ -31,7 +31,7 @@ namespace DailyWorkReport.Controllers
 
             var items = new List<UserDisplayViewModel>();
 
-            foreach(var user in _userManager.Users)
+            foreach(var user in users)
             {
                 var roles = await _userManager.GetRolesAsync(user);
                 items.Add(new UserDisplayViewModel
