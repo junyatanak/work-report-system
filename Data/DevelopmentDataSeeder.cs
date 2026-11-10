@@ -1,4 +1,5 @@
 using DailyWorkReport.Models;
+using DocumentFormat.OpenXml.Office.Excel;
 using Microsoft.EntityFrameworkCore;
 
 namespace DailyWorkReport.Data;
@@ -50,7 +51,8 @@ public static class DevelopmentDataSeeder
                 new WorkPattern { Name = "SLIDE-CARD-1P" },
                 new WorkPattern { Name = "OPP-BAG-1P" },
                 new WorkPattern { Name = "EXTRA-LABELING"},
-                new WorkPattern { Name = "JAN-STICKER-1P"}
+                new WorkPattern { Name = "JAN-STICKER-1P"},
+                new WorkPattern { Name = "STANDARD"}
             );
             await db.SaveChangesAsync();
         }
@@ -74,9 +76,47 @@ public static class DevelopmentDataSeeder
         {
             db.Products.AddRange(
                 new Product { ProductCode = "10000001", Name = "Correction Tape A", WorkClassId = classes["CORRECTION-TAPE"].Id },
-                new Product { ProductCode = "10000002", Name = "Correction Tape B", WorkClassId = classes["CORRECTION-TAPE"].Id }
+                new Product { ProductCode = "10000002", Name = "Correction Tape B", WorkClassId = classes["CORRECTION-TAPE"].Id },
+                new Product { ProductCode = "20000001", Name = "Adhesive Tape A", WorkClassId = classes["ADHESIVE-TAPE"].Id },
+                new Product { ProductCode = "20000002", Name = "Adhesive Tape B", WorkClassId = classes["ADHESIVE-TAPE"].Id },
+                new Product { ProductCode = "30000001", Name = "Ball Point Pen A", WorkClassId = classes["BALL-POINT-PEN"].Id },
+                new Product { ProductCode = "40000001", Name = "Mechanical Pencil A", WorkClassId = classes["MECHANICAL-PENCIL"].Id }
             );
             await db.SaveChangesAsync();
         }
+
+        if (!await db.StandardWorkTimes.AnyAsync())
+        {
+            var processes = await db.Processes.ToDictionaryAsync(p => p.Name);
+            var patterns = await db.WorkPatterns.ToDictionaryAsync(p => p.Name);
+
+            var rows = new (string Class, string Process, string Pattern, decimal? Seconds)[]
+            {
+                ("CORRECTION-TAPE", "ASSEMBLY", "BULK", 80m),
+                ("CORRECTION-TAPE", "ASSEMBLY", "SLIDE-CARD-1P", 100m),
+                ("CORRECTION-TAPE", "ASSEMBLY", "OPP-BAG-1P", 100m),
+                ("CORRECTION-TAPE", "ASSEMBLY", "EXTRA-LABELING", 120m),
+                ("ADHESIVE-TAPE", "ASSEMBLY", "BULK", 70m),
+                ("ADHESIVE-TAPE", "ASSEMBLY", "SLIDE-CARD-1P", 100),
+                ("ADHESIVE-TAPE", "PACKING", "OPP-BAG-1P", 120m),
+                ("BALL-POINT-PEN", "ASSEMBLY", "BULK", 30m),
+                ("BALL-POINT-PEN", "HEAT-TRANSFER-PRINTING", "STANDARD", 10m),
+                ("MECHANICAL-PENCIL", "BLISTER-PACKING", "STANDARD", 10m)
+            };
+
+            foreach (var r in rows)
+            {
+                db.StandardWorkTimes.Add(new StandardWorkTime
+                {
+                    WorkClassId = classes[r.Class].Id,
+                    ProcessId = processes[r.Process].Id,
+                    WorkPatternId = patterns[r.Pattern].Id,
+                    StandardCycleSeconds = r.Seconds
+                });
+            }
+            await db.SaveChangesAsync();
+        }
     }
+
+
 }
