@@ -54,5 +54,29 @@ public static class DevelopmentDataSeeder
             );
             await db.SaveChangesAsync();
         }
+
+        if (!await db.Workers.AnyAsync())
+        {
+            for (var i = 1; i <= 10; i++)
+            {
+                db.Workers.Add(new Worker
+                {
+                    WorkerNumber = 1000 + i,
+                    Name = i == 10 ? null : $"Worker {1000 + i}"
+                });
+            }
+            await db.SaveChangesAsync();
+        }
+
+        var classes = await db.WorkClasses.ToDictionaryAsync(c => c.Name);
+
+        if (!await db.Products.AnyAsync())
+        {
+            db.Products.AddRange(
+                new Product { ProductCode = "10000001", Name = "Correction Tape A", WorkClassId = classes["CORRECTION-TAPE"].Id },
+                new Product { ProductCode = "10000002", Name = "Correction Tape B", WorkClassId = classes["CORRECTION-TAPE"].Id }
+            );
+            await db.SaveChangesAsync();
+        }
     }
 }
