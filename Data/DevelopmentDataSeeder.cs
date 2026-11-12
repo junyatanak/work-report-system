@@ -118,5 +118,34 @@ public static class DevelopmentDataSeeder
         }
     }
 
+    private static async Task SeedTransactionsAsync(ApplicationDbContext db)
+    {
+        var today = DateOnly.FromDateTime(DateTime.Today);
+
+        if (!await db.ProductionOrders.AnyAsync())
+        {
+            var products = await db.Products.OrderBy(p => p.ProductCode).ToListAsync();
+
+            for (var i = 0; i < 10; i++)
+            {
+                var product = products[i % products.Count];
+                db.ProductionOrders.Add(new ProductionOrder
+                {
+                    OrderNumber = $"PO-{i + 1:D4}",
+                    ProductId = product.Id,
+                    OrderQty = 1000 + (i * 100),
+                    DueDate = today.AddDays(7 + i)
+                });
+            }
+
+            await db.SaveChangesAsync();
+        }
+
+        if (!await db.WorkReports.AnyAsync())
+        {
+            
+        }
+    }
+
 
 }
