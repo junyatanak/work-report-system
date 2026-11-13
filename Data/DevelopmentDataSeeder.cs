@@ -143,6 +143,56 @@ public static class DevelopmentDataSeeder
 
         if (!await db.WorkReports.AnyAsync())
         {
+            var user = await db.Users.OrderBy(u => u.UserName).FirstOrDefaultAsync();
+            if (user is null) return;
+
+            var workers = await db.Workers.OrderBy(w => w.WorkerNumber).ToListAsync();
+            var orders = await db.ProductionOrders
+                .Include(o => o.Product)
+                .OrderBy(o => o.OrderNumber)
+                .Take(6)
+                .ToListAsync();
+
+            for (var i = 0; i < orders.Count; i++)
+            {
+                var order = orders[i];
+
+                var candidates = await db.StandardWorkTimes
+                    .Where(s => s.WorkClassId == order.Product.WorkClassId)
+                    .OrderBy(s => s.Id)
+                    .ToListAsync();
+                var standard = candidates[i % candidates.Count];
+
+                var workDate = today.AddDays(-(i + 1));
+
+                var startHour = i % 3 == 2 ? 20 : 8;
+                var start = workDate.ToDateTime(new TimeOnly(startHour, 0));
+
+                var report = new WorkReport
+                {
+                    WorkDate = workDate,
+                    ProductionOrderId = order.Id,
+                    ProcessId = standard.ProcessId,
+                    WorkPatternId = standard.WorkPatternId,
+                    UserId = user.Id
+                };
+
+                for (var w = 0; w < 2; w++)
+                {
+                    report.WorkReportWorkers.Add(new WorkReportWorker
+                    {
+                        WorkerId = workers[(i * 2 + w) % workers.Count].Id,
+                        StartAt = start,
+                        EndAt = start.AddHours(9),
+                        BreakMinutes = w == 0 ? 40 : 30,
+                        ProducedQty = 500
+                    });
+                }
+
+                db.WorkReports.Add(report);
+
+            }
+            await db.SaveChangesAsync();
             
         }
     }
