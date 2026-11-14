@@ -41,14 +41,19 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
+    var db = services.GetRequiredService<ApplicationDbContext>();
 
     if (provider == "Sqlite")
-    {
-        var db = services.GetRequiredService<ApplicationDbContext>();
+    {        
         await db.Database.EnsureCreatedAsync();
     }
 
     await IdentitySeeder.SeedAsync(services);
+
+    if (provider == "Sqlite")
+    {
+        await DevelopmentDataSeeder.SeedAsync(db);
+    }
 }
 
 // Configure the HTTP request pipeline.
