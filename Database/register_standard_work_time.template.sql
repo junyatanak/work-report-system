@@ -73,3 +73,14 @@ WHERE NOT EXISTS (
       AND t.ProcessId = p.Id
       AND t.WorkPatternId = wp.Id
 )
+
+-- Check 2: review the resulting data
+SELECT wc.Name AS WorkClass, p.Name AS Process, wp.Name AS WorkPattern, t.StandardCycleSeconds
+FROM StandardWorkTimes t
+JOIN WorkClasses wc ON wc.Id = t.WorkClassId
+JOIN Processes p ON p.Id = t.ProcessId
+JOIN WorkPatterns wp ON wp.Id = t.WorkPatternId
+ORDER BY wc.Name, p.Name, wp.Name;
+
+-- Run with ROLLBACK first. Change to COMMIT only after checking the results.
+ROLLBACK;
