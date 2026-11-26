@@ -41,3 +41,35 @@ SELECT WorkClassName, ProcessName, WorkPatternName, COUNT(*) AS Cnt
 FROM #Src
 GROUP BY WorkClassName, ProcessName, WorkPatternName
 HAVING COUNT(*) > 1;
+
+
+-- Step 1: add master rows that do not exist yet
+INSERT INTO WorkClasses (Name)
+SELECT DISTINCT s.WorkClassName
+FROM #Src s
+WHERE NOT EXISTS (SELECT 1 FROM WorkClasses m WHERE m.Name = s.WorkClassName);
+
+INSERT INTO Processes (Name)
+SELECT DISTINCT s.ProcessName
+FROM #Src s
+WHERE NOT EXISTS (SELECT 1 FROM Processes m WHERE m.Name = s.ProcessName);
+
+INSERT INTO WorkPatterns (Name)
+SELECT DISTINCT s.WorkPatternName
+FROM #Src s
+WHERE NOT EXISTS (SELECT 1 FROM WorkPatterns m WHERE m.Name = s.WorkPatternName);
+
+-- Step 2: convert names to Ids and insert StandardWorkTimes (skip existing combinations)
+INSERT INTO StandardWorkTimes (WorkClassId, ProcessId, WorkPatternId, StandardCycleSeconds)
+SELECT wc.Id, p.Id, wp.Id, s.StandardCycleSeconds
+FROM #Src s
+JOIN WorkClasses wc ON wc.Name = s.WorkClassName
+JOIN Processes p ON p.Name = s.ProcessName
+JOIN WorkPatterns wp ON wp.Name = s.WorkPatternName
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM StandardWorkTimes t
+    WHERE t.WorkClassId = wc.Id
+      AND t.ProcessId = p.Id
+      AND t.WorkPatternId = wp.Id
+)
