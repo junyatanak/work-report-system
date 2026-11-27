@@ -42,25 +42,37 @@ FROM #Src
 GROUP BY WorkClassName, ProcessName, WorkPatternName
 HAVING COUNT(*) > 1;
 
+-- Capture only the rows inserted by this script
+CREATE TABLE #NewWorkClasses (Id INT, Name NVARCHAR(100));
+CREATE TABLE #NewProcesses (Id INT, Name NVARCHAR(100));
+CREATE TABLE #NewWorkPatterns (Id INT, Name NVARCHAR(100));
+CREATE TABLE #NewStandardWorkTimes (
+    WorkClassId INT, ProcessId INT, WorkPatternId INT, StandardCycleSeconds DECIMAL(9,2)
+);
 
 -- Step 1: add master rows that do not exist yet
 INSERT INTO WorkClasses (Name)
+OUTPUT INSERTED.Id, INSERTED.Name INTO #NewWorkClasses (Id, Name)
 SELECT DISTINCT s.WorkClassName
 FROM #Src s
 WHERE NOT EXISTS (SELECT 1 FROM WorkClasses m WHERE m.Name = s.WorkClassName);
 
 INSERT INTO Processes (Name)
+OUTPUT INSERTED.Id, INSERTED.Name INTO #NewProcesses (Id, Name)
 SELECT DISTINCT s.ProcessName
 FROM #Src s
 WHERE NOT EXISTS (SELECT 1 FROM Processes m WHERE m.Name = s.ProcessName);
 
 INSERT INTO WorkPatterns (Name)
+OUTPUT INSERTED.Id, INSERTED.Name INTO #NewWorkPatterns (Id, Name)
 SELECT DISTINCT s.WorkPatternName
 FROM #Src s
 WHERE NOT EXISTS (SELECT 1 FROM WorkPatterns m WHERE m.Name = s.WorkPatternName);
 
 -- Step 2: convert names to Ids and insert StandardWorkTimes (skip existing combinations)
 INSERT INTO StandardWorkTimes (WorkClassId, ProcessId, WorkPatternId, StandardCycleSeconds)
+OUTPUT INSERTED.WorkClassId, INSERTED.ProcessId, INSERTED.WorkPatternId, INSERTED.StandardCycleSeconds 
+    INTO #NewStandardWorkTimes (WorkClassId, ProcessId, WorkPatternId, StandardCycleSeconds)
 SELECT wc.Id, p.Id, wp.Id, s.StandardCycleSeconds
 FROM #Src s
 JOIN WorkClasses wc ON wc.Name = s.WorkClassName
@@ -74,13 +86,33 @@ WHERE NOT EXISTS (
       AND t.WorkPatternId = wp.Id
 )
 
--- Check 2: review the resulting data
-SELECT wc.Name AS WorkClass, p.Name AS Process, wp.Name AS WorkPattern, t.StandardCycleSeconds
-FROM StandardWorkTimes t
-JOIN WorkClasses wc ON wc.Id = t.WorkClassId
-JOIN Processes p ON p.Id = t.ProcessId
-JOIN WorkPatterns wp ON wp.Id = t.WorkPatternId
+-- Check 2-a: master rows added by this run
+SELECT 'WorkClasses' AS MasterTable, Name FROM #NewWorkClasses
+UNION ALL
+SELECT 'Processes', Name FROM #NewProcesses
+UNION ALL
+SELECT 'WorkPatterns', Name FROM #NewWorkPatterns;
+
+
+-- Check 2-b: StandardWorkTimes added by this run
+SELECT wc.Name AS WorkClass, p.Name AS Process, wp.Name AS WorkPattern, n.StandardCycleSeconds
+FROM #NewStandardWorkTimes n
+JOIN WorkClasses wc ON wc.Id = n.WorkClassId
+JOIN Processes p ON p.Id = n.ProcessId
+JOIN WorkPatterns wp ON wp.Id = n.WorkPatternId
 ORDER BY wc.Name, p.Name, wp.Name;
+
+-- Check 2-c: Excel rows skipped because the combination already existed
+SELECT s.WorkClassName, s.ProcessName, s.WorkPatternName, s.StandardCycleSeconds AS ExcelSeconds, t.StandardCycleSeconds AS ExistingSeconds
+FROM #Src s
+JOIN WorkClasses wc ON wc.Name = s.WorkClassName
+JOIN Processes p ON p.Name = s.ProcessName
+JOIN WorkPatterns wp ON wp.Name = s.WorkPatternName
+JOIN StandardWorkTimes t ON t.WorkClassId = wc.Id AND t.ProcessId = p.Id AND t.WorkPatternId = wp.Id
+WHERE NOT EXISTS (
+    SELECT 1 FROM #NewStandardWorkTimes n 
+    WHERE n.WorkClassId = wc.Id AND n.ProcessId = p.Id AND n.WorkPatternId = wp.Id
+)
 
 -- Run with ROLLBACK first. Change to COMMIT only after checking the results.
 ROLLBACK;
